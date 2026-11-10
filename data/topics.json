@@ -1,0 +1,138 @@
+{
+  "handle": "yourhandle",
+  "timezone": "UTC",
+  "notify_email": "",
+  "dashboard_url": "",
+  "tools_url": "",
+  "post_times": [
+    "10:00",
+    "12:30",
+    "18:00",
+    "20:30"
+  ],
+  "reel_on_grid": false,
+  "reel_trial": true,
+  "reel_music": null,
+  "services": [
+    {
+      "label": "My product",
+      "url": "https://example.com",
+      "tap": "🚀 My product",
+      "match": "product|example",
+      "pitch": "Here is the product I built. Take a look:"
+    }
+  ],
+  "topics": [
+    {
+      "name": "Claude",
+      "queries": [
+        "claude code",
+        "claude skills",
+        "mcp server"
+      ]
+    },
+    {
+      "name": "AI agents",
+      "queries": [
+        "ai agent",
+        "agentic workflow",
+        "multi-agent"
+      ]
+    },
+    {
+      "name": "Automation",
+      "queries": [
+        "n8n",
+        "workflow automation",
+        "browser automation ai"
+      ]
+    },
+    {
+      "name": "Voice AI",
+      "queries": [
+        "voice agent",
+        "text to speech",
+        "speech to text"
+      ]
+    },
+    {
+      "name": "AI coding",
+      "queries": [
+        "ai coding assistant",
+        "vibe coding",
+        "coding agent"
+      ]
+    },
+    {
+      "name": "Local AI",
+      "queries": [
+        "local llm",
+        "ollama",
+        "self-hosted ai"
+      ]
+    },
+    {
+      "name": "AI content",
+      "queries": [
+        "ai video generation",
+        "ai image generation",
+        "social media automation"
+      ]
+    },
+    {
+      "name": "Leads and scraping",
+      "queries": [
+        "web scraper ai",
+        "lead generation",
+        "ai crawler"
+      ]
+    }
+  ],
+  "funnel": {
+    "hello": "Hey 👋 thanks for the message!",
+    "nudge": "Still here if you want it 🙂 Tap whichever fits and I'll send it over.",
+    "button": "Open it",
+    "build_tap": "🛠 Work with me",
+    "build_match": "work|hire|custom|build|help",
+    "build_ask": "Happy to 🛠 Tell me what you need, in a line or two.",
+    "build_thanks": "Got it, thank you. I'll read this and reply to you personally here.",
+    "look_tap": "👀 Just looking",
+    "look_match": "look|brows|curious|nothing|not sure",
+    "look": "No problem 👀 Comment or DM any tool's word from my posts and I'll send its link.",
+    "look_button": "See the tools",
+    "wait_minutes": 1380,
+    "checkin": {
+      "enabled": false,
+      "hours": 20,
+      "text": "Hey 👋 did that link help? 👇",
+      "yes_tap": "👍 Yes",
+      "yes_match": "yes|👍|thanks|helpful",
+      "maybe_tap": "🤔 Not sure",
+      "maybe_match": "not sure|maybe|🤔",
+      "no_tap": "Not now 🙂"
+    },
+    "cooldown_hours": 72,
+    "question": "What are you into right now? Tap one and I'll send you the right thing 👇",
+    "welcome": "Hey there! Thanks for following me 🤗 Would it be okay if I asked you a question? ✨",
+    "welcome_tap": "Sure, send it over ⭐",
+    "ice_breakers": [
+      {
+        "question": "🚀 Tell me about your product",
+        "means": "product"
+      },
+      {
+        "question": "🛠 Can you help with my project?",
+        "means": "work with me"
+      },
+      {
+        "question": "👀 What do you share?",
+        "means": "menu"
+      }
+    ]
+  },
+  "hashtags": [
+    "#AITools",
+    "#OpenSource",
+    "#FreeTools"
+  ]
+}
