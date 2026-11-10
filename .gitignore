@@ -1,0 +1,10 @@
+.env
+.env.local
+__pycache__/
+.tools/
+posts/*/*.png
+posts/*/*.mp4
+.dashboard/
+Styles/
+posts/*/email.html
+posts/*/reel/
