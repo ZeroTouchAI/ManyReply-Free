@@ -1,0 +1,7 @@
+{
+  "cleanUrls": true,
+  "rewrites": [{ "source": "/dashboard/api/:path*", "destination": "/api/:path*" }],
+  "headers": [
+    { "source": "/dashboard/(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }] }
+  ]
+}
