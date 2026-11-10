@@ -1,0 +1,68 @@
+# The daily run, on GitHub's computers: no server of your own and no PC switched on.
+# It syncs your numbers, finds a repo, has YOUR AI account write the post, draws the slides, and (only when you have
+# turned posting on) publishes it through YOUR Zernio account. Keys come from this repository's secrets.
+#
+# Secrets (Settings > Secrets and variables > Actions > Secrets): ZERNIO_API_KEY and ONE AI key, for example
+#   ANTHROPIC_API_KEY, OPENAI_API_KEY, GEMINI_API_KEY or OPENROUTER_API_KEY.
+# Variables (same page, Variables tab): LLM_PROVIDER, optionally LLM_MODEL, and MANYREPLY_AUTO_PUBLISH=true when you
+# are happy with the drafts. Until then every run only makes a DRAFT and nothing is posted.
+name: Daily post
+on:
+  schedule:
+    - cron: "12 13 * * *" # once a day, UTC. Change the hour to suit you
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Post it for real (otherwise this run only makes a draft)"
+        type: boolean
+        default: false
+permissions:
+  contents: write
+concurrency: manyreply
+jobs:
+  daily:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      ZERNIO_API_KEY: ${{ secrets.ZERNIO_API_KEY }}
+      LLM_PROVIDER: ${{ vars.LLM_PROVIDER }}
+      LLM_MODEL: ${{ vars.LLM_MODEL }}
+      LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}
+      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      MANYREPLY_AUTO_PUBLISH: ${{ (github.event_name == 'workflow_dispatch' && inputs.publish && 'true') || vars.MANYREPLY_AUTO_PUBLISH }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: ffmpeg for the Reel and Story clips
+        run: sudo apt-get update -y && sudo apt-get install -y ffmpeg
+      - name: Check this machine and your keys
+        run: python manyreply.py doctor
+      - name: Daily run
+        run: python manyreply.py daily
+      - name: Drafts to look at
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: slides
+          path: |
+            posts/**/slide-*.png
+            posts/**/story.png
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Save the ledger
+        if: always()
+        run: |
+          git config user.name "manyreply-bot"
+          git config user.email "manyreply-bot@users.noreply.github.com"
+          git add data posts site
+          git diff --cached --quiet && exit 0
+          git commit -m "ManyReply: daily run"
+          git pull --rebase
+          git push
