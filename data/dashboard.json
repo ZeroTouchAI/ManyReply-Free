@@ -1,0 +1,69 @@
+{
+  "topics": [
+    {
+      "name": "Claude",
+      "queries": [
+        "claude code",
+        "claude skills",
+        "mcp server"
+      ]
+    },
+    {
+      "name": "AI agents",
+      "queries": [
+        "ai agent",
+        "agentic workflow",
+        "multi-agent"
+      ]
+    },
+    {
+      "name": "Automation",
+      "queries": [
+        "n8n",
+        "workflow automation",
+        "browser automation ai"
+      ]
+    },
+    {
+      "name": "Voice AI",
+      "queries": [
+        "voice agent",
+        "text to speech",
+        "speech to text"
+      ]
+    },
+    {
+      "name": "AI coding",
+      "queries": [
+        "ai coding assistant",
+        "vibe coding",
+        "coding agent"
+      ]
+    },
+    {
+      "name": "Local AI",
+      "queries": [
+        "local llm",
+        "ollama",
+        "self-hosted ai"
+      ]
+    },
+    {
+      "name": "AI content",
+      "queries": [
+        "ai video generation",
+        "ai image generation",
+        "social media automation"
+      ]
+    },
+    {
+      "name": "Leads and scraping",
+      "queries": [
+        "web scraper ai",
+        "lead generation",
+        "ai crawler"
+      ]
+    }
+  ],
+  "requests": []
+}
