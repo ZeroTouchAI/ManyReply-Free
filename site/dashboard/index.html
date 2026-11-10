@@ -1,0 +1,643 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>ManyReply Dashboard</title><link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2048%2048%22%20aria-hidden%3D%22true%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22lg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%233B82F6%22/%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23A855F7%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20x%3D%2219%22%20y%3D%221%22%20width%3D%2210%22%20height%3D%226%22%20rx%3D%223%22%20fill%3D%22url%28%23lg%29%22/%3E%3Crect%20x%3D%2218%22%20y%3D%2238%22%20width%3D%2212%22%20height%3D%228%22%20rx%3D%222.5%22%20fill%3D%22url%28%23lg%29%22/%3E%3Crect%20x%3D%222%22%20y%3D%2215%22%20width%3D%225%22%20height%3D%2213%22%20rx%3D%222.5%22%20fill%3D%22url%28%23lg%29%22/%3E%3Crect%20x%3D%2241%22%20y%3D%2215%22%20width%3D%225%22%20height%3D%2213%22%20rx%3D%222.5%22%20fill%3D%22url%28%23lg%29%22/%3E%3Crect%20x%3D%227%22%20y%3D%227%22%20width%3D%2234%22%20height%3D%2232%22%20rx%3D%2211%22%20fill%3D%22%230B1229%22%20stroke%3D%22url%28%23lg%29%22%20stroke-width%3D%224%22/%3E%3Crect%20x%3D%2217%22%20y%3D%2217%22%20width%3D%224%22%20height%3D%227%22%20rx%3D%222%22%20fill%3D%22%237DD3FC%22/%3E%3Crect%20x%3D%2227%22%20y%3D%2217%22%20width%3D%224%22%20height%3D%227%22%20rx%3D%222%22%20fill%3D%22%237DD3FC%22/%3E%3Cpath%20d%3D%22M18%2029c3.5%202.6%208.5%202.6%2012%200%22%20stroke%3D%22%237DD3FC%22%20stroke-width%3D%222.6%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E">
+<meta name="robots" content="noindex"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* one full-width column of sections (the owner's choice; keep it). Layout: a navy sidebar, a strip of account facts on top, then cards on a two-column grid
+   (schedule and growth beside a tall analytics card, then tables, posts and the editors). One column on phones. */
+:root{--bg:#F3F5FB;--surface:#FFFFFF;--raise:#F6F8FD;--fg:#111833;--muted:#5B6688;--line:#E2E7F3;
+ --accent:#3B6CF6;--accent-strong:#2550D9;--accent-soft:#E8EEFF;--side:#0B1229;--side-fg:#C7CFEA;--side-active:#3B6CF6;
+ --good:#16A34A;--warn:#B45309;--bad:#E5484D;--sky:#2563EB;--on-accent:#FFFFFF;
+ --display:'Plus Jakarta Sans','Segoe UI',system-ui,sans-serif;--body:'Plus Jakarta Sans','Segoe UI',system-ui,sans-serif;
+ --mono:'JetBrains Mono',Consolas,monospace;--r:16px;--grad:linear-gradient(90deg,#7C3AED,#3B6CF6)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0A1023;--surface:#0F1731;--raise:#142043;--fg:#E9EDFA;--muted:#8D99C2;--line:#1F2B52;
+ --accent:#4F8BFF;--accent-strong:#7AA7FF;--accent-soft:#16244D;--side:#0A1023;--side-fg:#C7CFEA;--side-active:#3B6CF6;
+ --good:#16A34A;--warn:#E3A23B;--bad:#EF4444;--sky:#5B8DEF;--on-accent:#FFFFFF;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0A1023;--surface:#0F1731;--raise:#142043;--fg:#E9EDFA;--muted:#8D99C2;--line:#1F2B52;
+ --accent:#4F8BFF;--accent-strong:#7AA7FF;--accent-soft:#16244D;--side:#0A1023;--side-fg:#C7CFEA;--side-active:#3B6CF6;
+ --good:#16A34A;--warn:#E3A23B;--bad:#EF4444;--sky:#5B8DEF;--on-accent:#FFFFFF;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font:14px/1.5 var(--body);margin:0}
+svg.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-visible,label:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh}
+.side{background:var(--side);color:var(--side-fg);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:22px;padding:22px 14px;overflow-y:auto}
+@media (max-height:860px){.promo{display:none}}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font:800 24px/1 var(--display);letter-spacing:-.02em;padding:4px 8px}
+.brand b{background:linear-gradient(90deg,#60A5FA,#A78BFA);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
+.brand svg{width:46px;height:46px}
+.side nav{display:flex;flex-direction:column;gap:4px}
+.side nav a{display:flex;align-items:center;gap:12px;color:var(--side-fg);text-decoration:none;font-weight:600;padding:11px 14px;border-radius:12px}
+.side nav a:hover{background:rgba(255,255,255,.07);color:#fff}
+.side nav a.on{background:var(--grad);color:#fff;box-shadow:0 6px 18px rgba(91,76,246,.35)}
+.side{border-right:1px solid rgba(255,255,255,.06)}
+.promo{margin-top:auto;border:0;border-radius:var(--r);padding:18px;display:grid;gap:8px;color:#F3E8FF;background:radial-gradient(120% 80% at 100% 100%,#EC4899 0,transparent 55%),linear-gradient(160deg,#4C1D95,#6D28D9 60%,#9333EA)}
+.promo b{color:#fff;font:800 17px/1.25 var(--display)}
+.promo p{margin:0;font-size:13px}
+.promo svg{width:40px;height:40px;color:#fff;background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF);border-radius:11px;padding:7px}
+.main{padding:18px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px));min-width:0}
+.topbar{display:flex;justify-content:flex-end;margin-bottom:18px}
+button.fact.theme{background:none;border:0;border-radius:0;font:inherit;color:inherit;cursor:pointer;text-align:left}
+button.fact.theme:hover{color:var(--accent)}
+.facts{display:flex;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+.fact{display:flex;align-items:center;gap:12px;padding:12px 18px;border-left:1px solid var(--line);min-width:0}
+.fact:first-child{border-left:0}
+.fact:first-child+.fact{border-left:1px solid var(--line)}
+.fact svg{color:var(--muted)}
+.fact b{display:block;font-weight:700}
+.fact span{display:block;font-size:12px;color:var(--muted)}
+.fact .ig{width:30px;height:30px;color:#fff;background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF);border-radius:9px;padding:5px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;align-items:start;
+ grid-template-areas:"sched" "posts" "anal" "perf" "top" "growth" "next" "apps" "work" "topics" "found" "older" "styles" "words"}
+.col{display:contents}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;min-width:0;scroll-margin-top:16px}
+.head{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.head>svg{width:38px;height:38px;color:#fff;background:var(--grad);border-radius:11px;padding:8px;margin-top:0}
+.head h2{font:800 19px/1.2 var(--display);margin:0;letter-spacing:-.01em;text-wrap:balance}
+.head p{margin:2px 0 0;color:var(--muted);font-size:13px}
+.head .aside{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.note{color:var(--muted);font-size:13px;margin:0 0 12px;max-width:70ch}
+.info{display:flex;gap:10px;background:var(--accent-soft);border-radius:12px;padding:12px 14px;margin-top:14px;font-size:13px;color:var(--fg)}
+.info svg{color:var(--accent)}
+.sched{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.sched div{border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0}
+.sched .ic{margin-bottom:6px;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;color:#fff;background:var(--accent)}
+.sched .ic.carousel{background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF)}.sched .ic.story{background:linear-gradient(45deg,#EC4899,#8B5CF6)}.sched .ic.reel{background:#16A34A}.sched .ic.next{background:#475A8C}
+.sched b{font-weight:700}
+.sched span{color:var(--muted);font-size:13px}
+.sched small{color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.sched .pill{margin-top:6px}
+.pill{display:inline-block;font:700 11px/1 var(--body);padding:5px 10px;border-radius:999px;background:var(--raise);color:var(--muted);white-space:nowrap;justify-self:start}
+.pill.live,.pill.posted{background:var(--accent-soft);color:var(--good)}
+.pill.scheduled,.pill.waiting,.pill.publishing,.pill.lookup{background:#FEF3C7;color:#92400E}
+.pill.planned{background:#E0E7FF;color:#3730A3}
+.pill.failed,.pill.partial,.pill.cancelled{background:#FDE2E1;color:var(--bad)}
+.pill.skipped,.pill.already-posted,.pill.legacy{background:var(--raise);color:var(--muted)}
+.sort{display:inline-flex;flex-direction:column;margin-left:6px;vertical-align:middle;line-height:1}
+.sort button{all:unset;cursor:pointer;font-size:8px;line-height:10px;padding:0 4px;color:var(--muted);opacity:.7}
+.sort button:hover,.sort button.on{color:var(--accent);opacity:1}
+.sort button:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-radius:3px}
+.alert{display:inline-flex;align-items:center;gap:8px;max-width:340px;padding:8px 12px;border-radius:10px;background:#FDE2E1;color:#B42318;border:1px solid #F5B5B2;font:700 12px/1.35 var(--body)}
+.alert[hidden]{display:none}
+.alert svg{width:16px;height:16px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .alert{background:rgba(239,68,68,.16);color:#FCA5A5;border-color:rgba(239,68,68,.4)}}
+:root[data-theme="dark"] .alert{background:rgba(239,68,68,.16);color:#FCA5A5;border-color:rgba(239,68,68,.4)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pill.scheduled,:root:not([data-theme="light"]) .pill.waiting,:root:not([data-theme="light"]) .pill.publishing,:root:not([data-theme="light"]) .pill.lookup{background:#3A2A0C;color:#F2C46B}
+ :root:not([data-theme="light"]) .pill.planned{background:#1E2350;color:#B4BCFF}:root:not([data-theme="light"]) .pill.failed,:root:not([data-theme="light"]) .pill.partial,:root:not([data-theme="light"]) .pill.cancelled{background:#3B1416;color:#FF9B9B}}
+:root[data-theme="dark"] .pill.scheduled,:root[data-theme="dark"] .pill.waiting,:root[data-theme="dark"] .pill.publishing,:root[data-theme="dark"] .pill.lookup{background:#3A2A0C;color:#F2C46B}
+:root[data-theme="dark"] .pill.planned{background:#1E2350;color:#B4BCFF}
+:root[data-theme="dark"] .pill.failed,:root[data-theme="dark"] .pill.partial,:root[data-theme="dark"] .pill.cancelled{background:#3B1416;color:#FF9B9B}
+.periods>input{position:absolute;opacity:0;pointer-events:none}
+.tabs{display:flex;gap:4px;background:var(--raise);border:1px solid var(--line);border-radius:999px;padding:4px;width:max-content;max-width:100%;flex-wrap:wrap}
+.tabs label{font-weight:700;font-size:13px;padding:7px 16px;border-radius:999px;cursor:pointer;color:var(--muted)}
+.tabs label:hover{color:var(--fg)}
+#p1:checked~.tabs label[for=p1],#p7:checked~.tabs label[for=p7],#p14:checked~.tabs label[for=p14],#p30:checked~.tabs label[for=p30],#p60:checked~.tabs label[for=p60],#p90:checked~.tabs label[for=p90],#p365:checked~.tabs label[for=p365]{background:var(--accent);color:var(--on-accent)}
+#p1:focus-visible~.tabs label[for=p1],#p7:focus-visible~.tabs label[for=p7],#p14:focus-visible~.tabs label[for=p14],#p30:focus-visible~.tabs label[for=p30],#p60:focus-visible~.tabs label[for=p60],#p90:focus-visible~.tabs label[for=p90],#p365:focus-visible~.tabs label[for=p365]{outline:2px solid var(--accent);outline-offset:2px}
+.tiles{display:none;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:14px}
+#p1:checked~.p1,#p7:checked~.p7,#p14:checked~.p14,#p30:checked~.p30,#p60:checked~.p60,#p90:checked~.p90,#p365:checked~.p365{display:grid}
+.tiles div{border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:grid;grid-template-columns:auto 1fr;gap:6px 8px;align-items:center}
+.tiles svg{width:30px;height:30px;padding:6px;border-radius:9px;color:#fff;background:var(--c,#3B6CF6)}
+.tiles div:nth-child(7n+1) svg{--c:#F97316}.tiles div:nth-child(7n+2) svg{--c:#3B6CF6}.tiles div:nth-child(7n+3) svg{--c:#0EA5E9}.tiles div:nth-child(7n+4) svg{--c:#EC4899}.tiles div:nth-child(7n+5) svg{--c:#10B981}.tiles div:nth-child(7n+6) svg{--c:#6366F1}.tiles div:nth-child(7n) svg{--c:#A855F7}
+.tiles span{font-size:12px;font-weight:600;color:var(--muted);line-height:1.3}
+.tiles b{grid-column:1/-1;font:800 22px/1 var(--display);font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tiles small{grid-column:1/-1;font-size:11px;color:var(--muted)}
+.tiles i{font-style:normal;font:700 11px/1 var(--body);padding:4px 8px;border-radius:999px;color:#fff;background:var(--muted)}
+.tiles i.up{background:var(--good);color:var(--on-accent)}.tiles i.down{background:var(--bad)}
+.gbody{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;grid-template-areas:"chart" "pick" "around" "tbl"}
+.chart{grid-area:chart;position:relative;align-self:start}
+.chart svg{display:block;width:100%;height:auto;touch-action:pan-y;cursor:pointer}
+.chart .grid{stroke:var(--line);stroke-width:1}
+.chart .line{fill:none;stroke:var(--accent);stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+.chart .area{fill:var(--accent);opacity:.12}
+.chart .end,.chart .hover-dot{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.chart .cross{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3}
+.chart .cross,.chart .hover-dot,.chart .pick{opacity:0}
+.chart .pick{fill:none;stroke:var(--accent-strong);stroke-width:3}
+.chart .tick{fill:var(--accent);opacity:.55}
+.chart text{fill:var(--muted);font:500 12px var(--mono)}
+.chart text.now{fill:var(--fg);font-weight:700}
+#ftip{position:absolute;top:8px;background:var(--surface);color:var(--fg);border:1px solid var(--line);box-shadow:0 4px 14px rgba(0,0,0,.08);font:600 12px/1.2 var(--mono);padding:8px 10px;border-radius:10px;white-space:nowrap;pointer-events:none}
+.pick-row{grid-area:pick;margin:0;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;color:var(--muted)}
+.pick-row input{width:auto;padding:6px 10px;font-weight:600}
+#around{grid-area:around;min-width:0}
+#around>p{margin:0 0 12px;font-size:14px;font-weight:600;color:var(--fg);max-width:none;background:color-mix(in srgb,#F5B301 16%,transparent);border:1px solid color-mix(in srgb,#F5B301 55%,transparent);border-left:5px solid #F5B301;border-radius:10px;padding:10px 14px}
+.gbody>details{grid-area:tbl}
+.wk{display:grid;gap:6px}
+.wk a,.wk div{display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:8px 12px;text-decoration:none;color:var(--fg);font-size:13px}
+.wk a:hover{border-color:var(--accent)}
+.wk span{color:var(--muted);font-size:12px}
+.wk em{font-style:normal;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wk b{font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:13px}
+th{font-size:12px;font-weight:700;color:var(--muted);text-align:left;padding:10px 12px;background:var(--raise);border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td small{display:block;color:var(--muted);max-width:60ch}
+details{margin-top:10px}
+summary{cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+details:not(.post)>summary{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:13px;color:var(--accent);border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px}
+details:not(.post)>summary::before{content:"";width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .15s}
+details[open]:not(.post)>summary::before{transform:rotate(45deg)}
+details:not(.post)>summary:hover{border-color:var(--accent);background:var(--accent-soft)}
+details.more>summary{margin-bottom:8px}
+.word{display:inline-block;font:700 11px/1 var(--mono);letter-spacing:.04em;padding:6px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent-strong);white-space:nowrap}
+.words{display:flex;flex-wrap:wrap;gap:8px}
+.clk{display:inline-block;min-width:30px;text-align:center;font:700 12px/1 var(--mono);padding:5px 8px;border-radius:999px;background:var(--raise);color:var(--muted)}
+.clk.hot{background:var(--bad);color:#fff}
+.posts{display:grid;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.post{margin:0;border-bottom:1px solid var(--line)}
+.post:last-child{border-bottom:0}
+.post summary,.planned-row{display:grid;grid-template-columns:96px minmax(0,1.4fr) auto minmax(0,.9fr) auto auto 42px 56px;gap:12px;align-items:center;padding:11px 14px;font-size:13px}
+.post summary:hover{background:var(--raise)}
+.planned-row{grid-template-columns:150px minmax(0,1fr) auto;background:var(--accent-soft);border-bottom:1px solid var(--line)}
+.planned-row b{font-weight:800;color:var(--accent-strong);font-size:12px;display:block}
+.post .d,.planned-row .d{font-size:12px;color:var(--muted)}
+.post .r{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.post .t{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.post .ig a{font-weight:700;text-decoration:none}
+.post dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 18px;margin:0;padding:6px 14px 16px 110px;font-size:13px}
+.post dt{color:var(--muted);font-weight:600}
+.post dd{margin:0}
+input,textarea{font:inherit;color:var(--fg);background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;width:100%;min-width:0}
+input:hover,textarea:hover{border-color:var(--muted)}
+textarea{font:400 13px/1.6 var(--mono);resize:vertical}
+button{font:700 13px/1 var(--body);color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 14px;cursor:pointer}
+button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+button:disabled{opacity:.4;cursor:default}
+button.primary,#add-topic button,#add-repo button{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+button.primary:hover:not(:disabled),#add-topic button:hover,#add-repo button:hover{background:var(--accent-strong);color:var(--on-accent)}
+button.remove{background:var(--bad);border-color:var(--bad);color:#fff;padding:6px 11px;font-size:12px;margin-left:6px}
+button.remove:hover:not(:disabled){color:#fff;filter:brightness(1.08)}
+button.star{background:none;border:0;border-radius:6px;padding:0 4px;margin:0 6px 0 0;font-size:17px;line-height:1;color:var(--muted);cursor:pointer;vertical-align:-1px}
+button.star:hover:not(:disabled),button.star.on{background:none;color:#E8A317}
+#add-repo{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+#add-repo label{flex-basis:100%;font-size:12px;font-weight:700;color:var(--muted)}
+#add-repo input{flex:1 1 220px}
+#matches{list-style:none;margin:0 0 10px;padding:0;display:grid;gap:8px}
+#matches:empty{display:none}
+#matches li{display:grid;grid-template-columns:1fr auto;gap:2px 12px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+#matches small{grid-column:1;color:var(--muted)}
+#matches button{grid-row:1/3;grid-column:2}
+table.queue td small{display:block;color:var(--muted)}
+.msg{font-size:13px;color:var(--muted);min-height:1.4em;margin:8px 0 0}
+.topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin:0;padding:0;list-style:none}
+.topics li{border:1px solid var(--line);border-radius:14px;padding:12px 14px;min-width:0;background:var(--raise)}
+.topics li:first-child{border:2px solid var(--accent)}
+.topics b{font-weight:800}
+.topics i{font:600 12px/1 var(--mono);color:var(--muted);font-style:normal;margin-right:8px}
+.topics p{margin:6px 0 0;color:var(--muted);font:400 12px/1.6 var(--mono)}
+.topics.edit li{display:flex;flex-direction:column;gap:8px}
+.topics.edit li.dirty{border-color:var(--warn)}
+.topics input,.topics textarea{background:var(--surface)}
+.rank{font-size:12px;font-weight:700;color:var(--muted)}
+.acts{display:flex;flex-wrap:wrap;gap:6px}
+.acts button{padding:7px 10px;font-size:12px}
+#add-topic{display:grid;gap:8px;margin-top:14px;padding:14px;border:1px dashed var(--line);border-radius:14px;max-width:460px}
+#add-topic h3{font:800 15px/1.3 var(--display);margin:0}
+#add-topic label{font-size:12px;font-weight:700;color:var(--muted)}
+#add-topic button{justify-self:start}
+.empty{color:var(--muted);padding:16px;border:1px dashed var(--line);border-radius:12px}
+@media (max-width:900px){
+ .app{grid-template-columns:minmax(0,1fr)}
+ .side{position:sticky;top:env(safe-area-inset-top,0px);z-index:3;height:auto;flex-direction:row;align-items:center;gap:12px;padding:10px max(16px,env(safe-area-inset-left,0px));overflow-x:auto}
+ .side nav{flex-direction:row}
+ .side nav a{padding:8px 12px;white-space:nowrap}
+ .side nav a svg{display:none}
+ .brand{font-size:19px}.brand svg{width:28px;height:28px}
+ .promo{display:none}
+ .topbar{justify-content:stretch}.facts{width:100%}.fact{flex:1 1 50%;border-left:0;border-top:1px solid var(--line)}
+ .gbody{grid-template-columns:minmax(0,1fr);grid-template-areas:"chart" "pick" "around" "tbl"}
+ .post summary{grid-template-columns:80px minmax(0,1fr) auto;row-gap:6px}.post .t,.post .ig,.post .clk{display:none}
+ .post dl{padding-left:14px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}details>summary::before{transition:none}}
+@media (min-width:1181px){.sched{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.credit{color:var(--muted);font-size:13px;text-align:center;margin-top:22px}.credit a{font-weight:700}
+.res{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;max-width:640px}.res span{display:inline-flex;align-items:center;gap:4px;font:500 12px var(--body);color:var(--muted);background:var(--raise);border:1px solid var(--line);border-radius:8px;padding:3px 7px;white-space:nowrap}.res svg.i{width:13px;height:13px;color:var(--accent)}.res b{color:var(--fg);font-family:var(--mono)}
+.fact em{font-style:normal;font-weight:700}.fact em.up{color:var(--good)}.fact em.down{color:var(--bad)}
+tr:has(+tr.res-row) td{border-bottom:0;padding-bottom:4px}tr.res-row td{padding-top:0}
+.res{flex-wrap:nowrap;overflow-x:auto;max-width:none;margin-top:0;scrollbar-width:thin}
+.qnote{font-size:12px;color:var(--muted);white-space:nowrap;margin-left:6px}
+.sched a.open{margin-top:6px;font-size:12px;font-weight:700;text-decoration:none}.sched a.open:hover{text-decoration:underline}
+.qnote{color:var(--bad)!important;font-weight:600}
+.tiles b.up{color:var(--good)}.tiles b.down{color:var(--bad)}
+.fact em.flat{color:var(--muted)}#around b.up{color:var(--good)}#around b.down{color:var(--bad)}
+.rch{font:600 12px/1 var(--mono);padding:5px 8px;border-radius:999px;background:var(--raise);color:var(--muted);white-space:nowrap}
+.rch.hi{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}.rch.lo{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
+.res span.lead{background:none;border-color:transparent;padding-left:0;font-weight:600;color:var(--text)}.res span.z{opacity:.45}.res span.win{border-color:var(--good)}.res span.win b{color:var(--good)}
+td.zero{color:var(--muted);opacity:.6}td.best{color:var(--good);font-weight:800}
+@media (max-width:900px){.post .rch{display:none}}
+.tiles b>span{font:inherit;color:inherit}.tiles b i{font-size:12px;vertical-align:middle}
+.style{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:0 0 12px}
+.st-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.st-head b{font-size:16px}
+.st-used{margin-left:auto;color:var(--muted);font-size:12px}.style p{margin:4px 0 12px;color:var(--muted);font-size:13px}
+.st-pics{display:grid;grid-template-columns:repeat(3,minmax(0,220px));gap:10px}
+.st-pics img{width:100%;height:auto;border-radius:10px;border:1px solid var(--line);display:block}
+details.more>.style:first-of-type{margin-top:12px}
+.apps{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.apps li{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.apps li small{flex-basis:100%;color:var(--muted)}.apps li .pill{margin-left:auto}.apps li.none{color:var(--muted)}
+#add-app{display:grid;gap:8px;max-width:520px}#add-app label{font-size:12px;font-weight:700;color:var(--muted)}#add-app button{justify-self:start;background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.apps li .res{flex-basis:100%;margin-top:2px}
+#matches a.name{font-weight:700;text-decoration:none}#matches a.name:hover{text-decoration:underline}
+</style>
+<script>try{const t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script></head><body>
+<div class="app">
+<aside class="side"><a class="brand" href="#top"><svg viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3B82F6"/><stop offset="1" stop-color="#A855F7"/></linearGradient></defs><rect x="19" y="1" width="10" height="6" rx="3" fill="url(#lg)"/><rect x="18" y="38" width="12" height="8" rx="2.5" fill="url(#lg)"/><rect x="2" y="15" width="5" height="13" rx="2.5" fill="url(#lg)"/><rect x="41" y="15" width="5" height="13" rx="2.5" fill="url(#lg)"/><rect x="7" y="7" width="34" height="32" rx="11" fill="#0B1229" stroke="url(#lg)" stroke-width="4"/><rect x="17" y="17" width="4" height="7" rx="2" fill="#7DD3FC"/><rect x="27" y="17" width="4" height="7" rx="2" fill="#7DD3FC"/><path d="M18 29c3.5 2.6 8.5 2.6 12 0" stroke="#7DD3FC" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg><span>Many<b>Reply</b></span></a>
+<nav aria-label="Sections"><a href="#top" class=on><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7M5 10v10h5v-6h4v6h5V10"/></svg>Dashboard</a><a href="#schedule"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4"/></svg>Schedule</a><a href="#posts"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h7"/></svg>Posted</a><a href="#analytics"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V11M10 20V5M15 20v-7M20 20V8"/></svg>Analytics</a><a href="#perf"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V11M10 20V5M15 20v-7M20 20V8"/></svg>Performance by Type</a><a href="#top-posts"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.3.9-4.5 4.4 1 6.1L12 17l-5.5 3 1-6.1L3 9.5l6.3-.9z"/></svg>Top Posts</a><a href="#growth"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg>Growth</a><a href="#upnext"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>Up Next</a><a href="#apps"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h11"/></svg>My Apps</a><a href="#working"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.3.9-4.5 4.4 1 6.1L12 17l-5.5 3 1-6.1L3 9.5l6.3-.9z"/></svg>What's Working</a><a href="#topics-card"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM21 21l-5-5"/></svg>Search Topics</a><a href="#repos"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h11"/></svg>Repositories</a><a href="#styles"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 15l5-5 4 4 3-3 4 4"/></svg>Current Styles</a><a href="#words"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg>Comment Words</a></nav>
+<div class="promo"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.5"/><path d="M17 7h.01"/></svg><b>Automate. Engage. Grow.</b><p>Find great GitHub repos, turn them into Instagram posts, and turn comments into new followers.</p></div></aside>
+<div class="main" id="top">
+<div class="topbar"><div class="facts">
+<button type="button" class="fact theme" id="theme" aria-label="Switch light or dark mode"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/></svg><div><b>Theme</b><span id="theme-name">Auto</span></div></button>
+<div class="fact"><svg class="i ig" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.5"/><path d="M17 7h.01"/></svg><div><b>@yourhandle</b><span>– followers</span></div></div>
+<div class="fact"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg><div><b>0 reached</b><span>last 7 days · <em class="flat">= 0</em> vs week before</span></div></div>
+<button type="button" class="fact theme" id="refresh" title="Pull the latest numbers now (free, about 2 minutes)"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2"/></svg><div><b>Last updated</b><span id="refresh-note">Nov 10, 05:22 AM ET · Update now</span></div></button>
+</div></div>
+<div class="grid">
+<div class="col">
+<section class="card" id="schedule" style="grid-area:sched"><div class="head"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2"/></svg><div><h2>Schedule</h2><p>What goes out next, in your local time (UTC)</p></div><div class=aside><div class="alert" id="missed" role="status" hidden><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v6M12 7h.01"/></svg><span></span></div></div></div>
+<div class="sched"><div><span class='ic next'><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4"/></svg></span><b>Next post</b><span>Tue 10 Nov, 10:00 AM</span><small title="the search&#x27;s pick (its turn)">the search&#x27;s pick (its turn)</small><span class='pill planned'>planned</span></div></div></section>
+<section class="card growth" id="growth" style="grid-area:growth"><div class="head"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg><div><h2>Growth</h2><p>Follower history. The small bars along the bottom are days you posted (taller means more posts). Click a day to see those posts.</p></div></div>
+<div class="gbody"><div class="empty">The follower chart appears after two days of data.</div></div></section>
+<section class="card" id="perf" style="grid-area:perf"><div class="head"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V11M10 20V5M15 20v-7M20 20V8"/></svg><div><h2>Performance by type</h2><p>Posts at least 3 days old</p></div></div>
+<div class="scroll"><table class="rank"><tr><th>Type</th><th class="n">Posts</th><th class="n">Avg reach</th><th class="n">Avg views</th><th class="n">Saves</th><th class="n">Shares</th><th class="n">Follows</th></tr><tr><td>ManyReply carousels</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td></tr><tr><td>ManyReply Reels</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td></tr><tr><td>Everything else</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td></tr></table></div></section>
+<section class="card" id="top-posts" style="grid-area:top"><div class="head"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.3.9-4.5 4.4 1 6.1L12 17l-5.5 3 1-6.1L3 9.5l6.3-.9z"/></svg><div><h2>Top posts</h2><p>Your 10 best posts of the last 60 days by reach. The x column is reach against your usual post: copy what the top ones have in common.</p></div></div>
+<div class="empty">Shows up once posts have numbers.</div></section>
+<section class="card" id="posts" style="grid-area:posts"><div class="head"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h7"/></svg><div><h2>Posted</h2><p>What went out, newest first. Click a line for its details; a red number means people clicked the link.</p></div></div>
+<div class="empty">Nothing posted yet.</div></section>
+<section class="card" id="topics-card" style="grid-area:topics"><div class="head"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM21 21l-5-5"/></svg><div><h2>Search topics</h2><p>What it searches GitHub for. The higher a topic sits, the more its repos are favoured.</p></div></div>
+<ul class="topics" id="topics"><li><b><i>1</i>Claude</b><p>claude code<br>claude skills<br>mcp server</p></li><li><b><i>2</i>AI agents</b><p>ai agent<br>agentic workflow<br>multi-agent</p></li><li><b><i>3</i>Automation</b><p>n8n<br>workflow automation<br>browser automation ai</p></li><li><b><i>4</i>Voice AI</b><p>voice agent<br>text to speech<br>speech to text</p></li><li><b><i>5</i>AI coding</b><p>ai coding assistant<br>vibe coding<br>coding agent</p></li><li><b><i>6</i>Local AI</b><p>local llm<br>ollama<br>self-hosted ai</p></li><li><b><i>7</i>AI content</b><p>ai video generation<br>ai image generation<br>social media automation</p></li><li><b><i>8</i>Leads and scraping</b><p>web scraper ai<br>lead generation<br>ai crawler</p></li></ul>
+<form id="add-topic" hidden><h3>Add a topic</h3>
+<label for="new-name">Name</label><input id="new-name" required maxlength="60" placeholder="e.g. Claude skills">
+<label for="new-queries">GitHub search terms, one per line</label><textarea id="new-queries" required rows="3" placeholder="claude skills&#10;agent skills"></textarea>
+<button type="submit">Add to the top</button></form>
+<p id="topics-msg" class="msg" role="status"></p></section>
+<section class="card" id="repos" data-sortable style="grid-area:found"><div class="head"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h11"/></svg><div><h2>Repositories</h2><p>What the latest search found, not run ye. Repos already posted are left out. Click a star to make one a favorite: it goes out in your next favorite slot.</p></div></div>
+<div class="empty">No search has run yet.</div></section>
+</div><div class="col">
+<section class="card" id="analytics" style="grid-area:anal"><div class="head"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V11M10 20V5M15 20v-7M20 20V8"/></svg><div><h2>Analytics</h2><p>Each period against the one before it</p></div></div>
+<div class="periods"><input type="radio" name="period" id="p1" checked><input type="radio" name="period" id="p7"><input type="radio" name="period" id="p14"><input type="radio" name="period" id="p30"><input type="radio" name="period" id="p60"><input type="radio" name="period" id="p90"><input type="radio" name="period" id="p365"><div class="tabs"><label for="p1">24 hours</label><label for="p7">7 days</label><label for="p14">14 days</label><label for="p30">30 days</label><label for="p60">60 days</label><label for="p90">90 days</label><label for="p365">1 year</label></div><div class="tiles p1"><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0"/></svg><span>Followers</span><b class=''><span>–</span></b><small>no earlier data</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 15l5-5 4 4 3-3 4 4"/></svg><span>Carousels posted</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the 24 hours before</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 3L10 14M21 3l-7 18-4-8-8-4z"/></svg><span>Sends</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the 24 hours before</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg><span>Saves</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the 24 hours before</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.3.9-4.5 4.4 1 6.1L12 17l-5.5 3 1-6.1L3 9.5l6.3-.9z"/></svg><span>Follows from posts</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the 24 hours before</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><span>Word comments</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the 24 hours before</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg><span>Links sent by DM</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the 24 hours before</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 9l11 4-5 2-2 5zM5 3v3M3 5h3"/></svg><span>Link clicks</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the 24 hours before</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg><span>Views</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the 24 hours before</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-8-5-8-11a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 6-8 11-8 11z"/></svg><span>Likes</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the 24 hours before</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><span>Comments</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the 24 hours before</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg><span>Reel views</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the 24 hours before</small></div></div><div class="tiles p7"><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0"/></svg><span>Followers</span><b class=''><span>–</span></b><small>no earlier data</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 15l5-5 4 4 3-3 4 4"/></svg><span>Carousels posted</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 7d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 3L10 14M21 3l-7 18-4-8-8-4z"/></svg><span>Sends</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 7d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg><span>Saves</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 7d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.3.9-4.5 4.4 1 6.1L12 17l-5.5 3 1-6.1L3 9.5l6.3-.9z"/></svg><span>Follows from posts</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 7d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><span>Word comments</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 7d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg><span>Links sent by DM</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 7d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 9l11 4-5 2-2 5zM5 3v3M3 5h3"/></svg><span>Link clicks</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 7d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg><span>Views</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 7d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-8-5-8-11a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 6-8 11-8 11z"/></svg><span>Likes</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 7d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><span>Comments</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 7d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg><span>Reel views</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 7d</small></div></div><div class="tiles p14"><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0"/></svg><span>Followers</span><b class=''><span>–</span></b><small>no earlier data</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 15l5-5 4 4 3-3 4 4"/></svg><span>Carousels posted</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 14d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 3L10 14M21 3l-7 18-4-8-8-4z"/></svg><span>Sends</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 14d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg><span>Saves</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 14d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.3.9-4.5 4.4 1 6.1L12 17l-5.5 3 1-6.1L3 9.5l6.3-.9z"/></svg><span>Follows from posts</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 14d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><span>Word comments</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 14d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg><span>Links sent by DM</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 14d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 9l11 4-5 2-2 5zM5 3v3M3 5h3"/></svg><span>Link clicks</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 14d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg><span>Views</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 14d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-8-5-8-11a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 6-8 11-8 11z"/></svg><span>Likes</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 14d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><span>Comments</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 14d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg><span>Reel views</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 14d</small></div></div><div class="tiles p30"><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0"/></svg><span>Followers</span><b class=''><span>–</span></b><small>no earlier data</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 15l5-5 4 4 3-3 4 4"/></svg><span>Carousels posted</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 30d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 3L10 14M21 3l-7 18-4-8-8-4z"/></svg><span>Sends</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 30d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg><span>Saves</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 30d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.3.9-4.5 4.4 1 6.1L12 17l-5.5 3 1-6.1L3 9.5l6.3-.9z"/></svg><span>Follows from posts</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 30d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><span>Word comments</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 30d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg><span>Links sent by DM</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 30d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 9l11 4-5 2-2 5zM5 3v3M3 5h3"/></svg><span>Link clicks</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 30d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg><span>Views</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 30d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-8-5-8-11a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 6-8 11-8 11z"/></svg><span>Likes</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 30d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><span>Comments</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 30d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg><span>Reel views</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 30d</small></div></div><div class="tiles p60"><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0"/></svg><span>Followers</span><b class=''><span>–</span></b><small>no earlier data</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 15l5-5 4 4 3-3 4 4"/></svg><span>Carousels posted</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 60d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 3L10 14M21 3l-7 18-4-8-8-4z"/></svg><span>Sends</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 60d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg><span>Saves</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 60d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.3.9-4.5 4.4 1 6.1L12 17l-5.5 3 1-6.1L3 9.5l6.3-.9z"/></svg><span>Follows from posts</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 60d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><span>Word comments</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 60d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg><span>Links sent by DM</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 60d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 9l11 4-5 2-2 5zM5 3v3M3 5h3"/></svg><span>Link clicks</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 60d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg><span>Views</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 60d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-8-5-8-11a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 6-8 11-8 11z"/></svg><span>Likes</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 60d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><span>Comments</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 60d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg><span>Reel views</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 60d</small></div></div><div class="tiles p90"><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0"/></svg><span>Followers</span><b class=''><span>–</span></b><small>no earlier data</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 15l5-5 4 4 3-3 4 4"/></svg><span>Carousels posted</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 90d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 3L10 14M21 3l-7 18-4-8-8-4z"/></svg><span>Sends</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 90d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg><span>Saves</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 90d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.3.9-4.5 4.4 1 6.1L12 17l-5.5 3 1-6.1L3 9.5l6.3-.9z"/></svg><span>Follows from posts</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 90d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><span>Word comments</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 90d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg><span>Links sent by DM</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 90d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 9l11 4-5 2-2 5zM5 3v3M3 5h3"/></svg><span>Link clicks</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 90d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg><span>Views</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 90d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-8-5-8-11a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 6-8 11-8 11z"/></svg><span>Likes</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 90d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><span>Comments</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 90d</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg><span>Reel views</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs previous 90d</small></div></div><div class="tiles p365"><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0"/></svg><span>Followers</span><b class=''><span>–</span></b><small>no earlier data</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 15l5-5 4 4 3-3 4 4"/></svg><span>Carousels posted</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the year before</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 3L10 14M21 3l-7 18-4-8-8-4z"/></svg><span>Sends</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the year before</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg><span>Saves</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the year before</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.3.9-4.5 4.4 1 6.1L12 17l-5.5 3 1-6.1L3 9.5l6.3-.9z"/></svg><span>Follows from posts</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the year before</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><span>Word comments</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the year before</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg><span>Links sent by DM</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the year before</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 9l11 4-5 2-2 5zM5 3v3M3 5h3"/></svg><span>Link clicks</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the year before</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg><span>Views</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the year before</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-8-5-8-11a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 6-8 11-8 11z"/></svg><span>Likes</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the year before</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><span>Comments</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the year before</small></div><div><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg><span>Reel views</span><b class=''><span>0</span><i class='flat'>= 0</i></b><small>vs the year before</small></div></div></div>
+<div class="info"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v6M12 7h.01"/></svg><span>Reach, sends, saves and follows cover everything the account posted. Word comments, links and clicks cover the ManyReply carousels only. Instagram's numbers lag about two days. In the last 30 days the account reached – people and – of them engaged.</span></div></section>
+<section class="card" id="apps" style="grid-area:apps"><div class="head"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h11"/></svg><div><h2>My apps</h2><p>Your own apps. One goes out every 3 weeks on a weekday, taking the search's turn; each comes back after 90 days at the earliest. Next one is due now (first weekday on the search&#x27;s turn).</p></div></div>
+<ul class="apps" id="app-list"><li class='none'>No apps yet. Add your first one below.</li></ul>
+<form id="add-app" hidden><p class="note">A GitHub repo, a website, or both. With both, the post links people to the website.</p>
+<label for="app-url">GitHub link</label><input id="app-url" placeholder="https://github.com/you/your-app">
+<label for="app-site">Website</label><input id="app-site" placeholder="https://yourapp.com">
+<label for="app-pitch">One line about it (optional)</label><input id="app-pitch" maxlength="120" placeholder="What it does and who it's for">
+<button type="submit">Add app</button></form><p id="apps-msg" class="msg" role="status"></p></section>
+<section class="card" id="working" style="grid-area:work"><div class="head"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.3.9-4.5 4.4 1 6.1L12 17l-5.5 3 1-6.1L3 9.5l6.3-.9z"/></svg><div><h2>What's working</h2><p>ManyReply posts by topic, style and posting time, best first</p></div></div>
+<div class="empty">Shows up once posts have numbers.</div></section>
+<section class="card" id="upnext" style="grid-area:next"><div class="head"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg><div><h2>Up next</h2><p>Posted before anything the search finds: Telegram first, then this list. Click a star to make a repo a favorite: favorites go ahead of other requests here, and come around again every 4 days or so, even ones you have already posted (each can return 30 days after its last post, with a fresh angle). The Posted list has stars too.</p></div></div>
+<form id="add-repo" hidden><label for="new-repo">A GitHub link, a website, or the repo's name</label>
+<input id="new-repo" required placeholder="github.com/owner/name, newpipe.net, or NewPipe"><button type="submit">Search</button></form>
+<ul id="matches"></ul><p id="requests-msg" class="msg" role="status"></p>
+<div class="scroll"><table class="queue"><tr><th>Repo</th><th>Sent by</th><th class="n" title="GitHub stars">Stars</th><th class="n">Added</th><th>Status</th></tr><tr class='none'><td colspan='5'>Nothing requested. The next post comes from the search.</td></tr></table></div></section>
+<section class="card" id="styles" style="grid-area:styles"><div class="head"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 15l5-5 4 4 3-3 4 4"/></svg><div><h2>Current styles</h2><p>The 12 looks posts rotate through, one per post. Tell Claude which one to change and how.</p></div></div>
+<div class='style'><div class='st-head'><b>Ember</b><span class='pill planned'>next post</span><span class='st-used'>used on 0 live posts</span></div><p>Near-black with a warm orange glow; orange highlight words.</p><div class='st-pics'><img src="/dashboard/looks/ember-1.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/ember-2.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/ember-3.png" alt="" loading="lazy" width="360" height="450"></div></div><details class='more'><summary>See all 12 styles</summary><div class='style'><div class='st-head'><b>Navy Stripe</b><span class='st-used'>used on 0 live posts</span></div><p>Deep navy, big capital headline, orange diagonal stripe in the corner.</p><div class='st-pics'><img src="/dashboard/looks/navy-stripe-1.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/navy-stripe-2.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/navy-stripe-3.png" alt="" loading="lazy" width="360" height="450"></div></div><div class='style'><div class='st-head'><b>Midnight Gold</b><span class='st-used'>used on 0 live posts</span></div><p>Midnight navy with gold highlights and a gold corner tab.</p><div class='st-pics'><img src="/dashboard/looks/midnight-gold-1.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/midnight-gold-2.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/midnight-gold-3.png" alt="" loading="lazy" width="360" height="450"></div></div><div class='style'><div class='st-head'><b>Banner</b><span class='st-used'>used on 0 live posts</span></div><p>Violet fading into blue with pink highlights, like the tools page banner.</p><div class='st-pics'><img src="/dashboard/looks/banner-1.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/banner-2.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/banner-3.png" alt="" loading="lazy" width="360" height="450"></div></div><div class='style'><div class='st-head'><b>Bold Band</b><span class='st-used'>used on 0 live posts</span></div><p>Navy with a blue, violet and pink stripe across the bottom corner.</p><div class='st-pics'><img src="/dashboard/looks/bold-band-1.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/bold-band-2.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/bold-band-3.png" alt="" loading="lazy" width="360" height="450"></div></div><div class='style'><div class='st-head'><b>Paper Blue</b><span class='st-used'>used on 0 live posts</span></div><p>Clean white page with blue highlights. The light one.</p><div class='st-pics'><img src="/dashboard/looks/paper-blue-1.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/paper-blue-2.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/paper-blue-3.png" alt="" loading="lazy" width="360" height="450"></div></div><div class='style'><div class='st-head'><b>Afterglow</b><span class='st-used'>used on 0 live posts</span></div><p>Midnight navy fading into magenta, with pink highlights.</p><div class='st-pics'><img src="/dashboard/looks/afterglow-1.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/afterglow-2.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/afterglow-3.png" alt="" loading="lazy" width="360" height="450"></div></div><div class='style'><div class='st-head'><b>Logo Glow</b><span class='st-used'>used on 0 live posts</span></div><p>Black with the logo&#x27;s purple-to-orange gradient on the key words and magenta and orange glows.</p><div class='st-pics'><img src="/dashboard/looks/logo-glow-1.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/logo-glow-2.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/logo-glow-3.png" alt="" loading="lazy" width="360" height="450"></div></div><div class='style'><div class='st-head'><b>Redline</b><span class='st-used'>used on 0 live posts</span></div><p>Black with bold red tags and the key word in a red box.</p><div class='st-pics'><img src="/dashboard/looks/redline-1.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/redline-2.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/redline-3.png" alt="" loading="lazy" width="360" height="450"></div></div><div class='style'><div class='st-head'><b>Spectrum</b><span class='st-used'>used on 0 live posts</span></div><p>Hot pink-red page, capital headline, yellow highlights.</p><div class='st-pics'><img src="/dashboard/looks/spectrum-1.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/spectrum-2.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/spectrum-3.png" alt="" loading="lazy" width="360" height="450"></div></div><div class='style'><div class='st-head'><b>Circuit</b><span class='st-used'>used on 0 live posts</span></div><p>Deep purple-blue with sky-blue highlights and a soft glow.</p><div class='st-pics'><img src="/dashboard/looks/circuit-1.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/circuit-2.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/circuit-3.png" alt="" loading="lazy" width="360" height="450"></div></div><div class='style'><div class='st-head'><b>Neon</b><span class='st-used'>used on 0 live posts</span></div><p>Dark night blue with neon blue and pink highlights.</p><div class='st-pics'><img src="/dashboard/looks/neon-1.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/neon-2.png" alt="" loading="lazy" width="360" height="450"><img src="/dashboard/looks/neon-3.png" alt="" loading="lazy" width="360" height="450"></div></div></details></section>
+<section class="card" id="words" style="grid-area:words"><div class="head"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><div><h2>Comment words</h2><p>Used already: a new post can never reuse one</p></div></div>
+<div class="empty">None yet.</div></section>
+
+</div>
+</div>
+<footer class="credit">ManyReply v2.14.0 &middot; <a href="https://github.com/ZeroTouchAI/ManyReply-Free" target="_blank" rel="noopener">Free &amp; open source</a></footer></div></div>
+<script>window.KNOWN_REPOS = [];</script>
+<script>(() => {  // light / dark switch: Auto follows the device, then Light, then Dark
+  const btn = document.getElementById("theme"), name = document.getElementById("theme-name"), root = document.documentElement;
+  const show = () => name.textContent = {light: "Light", dark: "Dark"}[root.dataset.theme] || "Auto";
+  btn.onclick = () => {
+    const dark = matchMedia("(prefers-color-scheme: dark)").matches;  // Auto, the opposite of the device, the device, Auto
+    const order = dark ? ["", "light", "dark"] : ["", "dark", "light"], next = order[(order.indexOf(root.dataset.theme || "") + 1) % 3];
+    if (next) root.dataset.theme = next; else delete root.dataset.theme;
+    try { next ? localStorage.setItem("theme", next) : localStorage.removeItem("theme"); } catch (e) {}
+    show();
+  };
+  show();
+})();</script>
+<script>(() => {  // "Update now": starts the free GitHub refresh; the new page is live about two minutes later
+  const btn = document.getElementById("refresh"), note = document.getElementById("refresh-note");
+  btn.onclick = async () => {
+    btn.disabled = true; note.textContent = "Starting the update…";
+    try {
+      const r = await fetch("/dashboard/api/refresh", {method: "POST"}), j = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(j.error || "Update could not start.");
+      let left = 150;
+      const tick = setInterval(() => {
+        note.textContent = "Updating… reloads in " + Math.floor(left / 60) + ":" + String(left % 60).padStart(2, "0");
+        if (--left < 0) { clearInterval(tick); location.reload(); }
+      }, 1000);
+    } catch (e) { note.textContent = e.message; btn.disabled = false; }
+  };
+})();</script>
+<script>window.POST_DAYS = []; window.SCHED_TZ = "UTC"; window.LAST_SLOT = "20:30";</script>
+<script>(() => {  // the red bar beside Schedule: days with no post. Worked out here, when the page is opened, because a run
+  // that never started (out of AI credits) never rebuilt this page.
+  const el = document.getElementById("missed");
+  if (!el || !window.POST_DAYS || !window.POST_DAYS.length) return;
+  const zone = window.SCHED_TZ || undefined;
+  let now;
+  try {
+    now = Object.fromEntries(new Intl.DateTimeFormat("en-CA", {timeZone: zone, year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", hourCycle: "h23"}).formatToParts(new Date()).map(x => [x.type, x.value]));
+  } catch (e) { return; }
+  const iso = (ms) => new Date(ms).toISOString().slice(0, 10);
+  const ms = (d) => Date.parse(d + "T00:00:00Z");
+  const today = now.year + "-" + now.month + "-" + now.day;
+  const last = window.POST_DAYS.reduce((a, b) => (a > b ? a : b));
+  const slot = window.LAST_SLOT ? window.LAST_SLOT.split(":").map(Number) : null;
+  const pastSlot = !!slot && (+now.hour > slot[0] || (+now.hour === slot[0] && +now.minute >= slot[1]));
+  const start = Math.max(ms(last) + 864e5, ms(today) - 14 * 864e5);
+  const end = pastSlot ? ms(today) : ms(today) - 864e5;
+  const label = (d) => new Date(ms(d)).toLocaleDateString("en-US", {weekday: "short", month: "short", day: "numeric", timeZone: "UTC"});
+  const days = [];
+  for (let t = start; t <= end; t += 864e5) days.push(iso(t));
+  if (!days.length) { el.hidden = true; return; }
+  el.querySelector("span").textContent = "No post went out on " + days.map(label).join(", ") +
+    ". The next daily run retries it until it is live.";
+  el.hidden = false;
+})();</script>
+<script>(() => {  // little up / down arrows in the column heads of the Repositories and older-words tables
+  document.querySelectorAll("[data-sortable]").forEach(card => {
+    const tables = [...card.querySelectorAll("table")];
+    if (!tables.length) return;
+    const body = t => t.tBodies[0] || t;
+    const rowsOf = t => [...body(t).rows].filter(r => !r.querySelector("th"));
+    const groupUp = rows => rows.reduce((gs, r) => { r.classList.contains("res-row") && gs.length ? gs[gs.length - 1].push(r) : gs.push([r]); return gs; }, []);
+    const first = groupUp(rowsOf(tables[0]));
+    const cap = first.length, groups = groupUp(tables.flatMap(rowsOf));
+    groups.forEach((g, i) => { g.order = i; });
+    const val = td => {
+      const t = (td ? td.textContent : "").replace(/^[\u2606\u2605\s]+/, "").trim();
+      if (!t || /^[\u2013-]$/.test(t)) return null;
+      const m = t.replace(/,/g, "").match(/^(\d+(?:\.\d+)?)\s*([KkMm])?$/);
+      return m ? parseFloat(m[1]) * ({k: 1e3, m: 1e6}[(m[2] || "").toLowerCase()] || 1) : t.toLowerCase();
+    };
+    const state = {col: -1, dir: 0};
+    const buttons = [];
+    const apply = () => {
+      const list = [...groups];
+      if (state.dir) {
+        const keyed = list.map(g => [g, val(g[0].cells[state.col])]);
+        keyed.sort(([a, x], [b, y]) => {
+          if (x === null || y === null) return (x === null) - (y === null) || a.order - b.order;
+          const c = typeof x === "number" && typeof y === "number" ? x - y : String(x).localeCompare(String(y), undefined, {numeric: true});
+          return c * state.dir || a.order - b.order;
+        });
+        keyed.forEach(([g], i) => { list[i] = g; });
+      } else list.sort((a, b) => a.order - b.order);
+      list.forEach((g, i) => g.forEach(r => body(i < cap || !tables[1] ? tables[0] : tables[1]).appendChild(r)));
+      buttons.forEach(b => { const on = +b.dataset.col === state.col && +b.dataset.dir === state.dir; b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
+    };
+    tables.forEach(t => [...t.rows[0].cells].forEach(th => {
+      const name = th.textContent.trim() || "column", box = document.createElement("span");
+      box.className = "sort";
+      [[1, "\u25B2", "low to high"], [-1, "\u25BC", "high to low"]].forEach(([dir, mark, words]) => {
+        const b = document.createElement("button");
+        b.type = "button"; b.textContent = mark; b.dataset.col = th.cellIndex; b.dataset.dir = dir;
+        b.title = "Sort " + name + " " + words; b.setAttribute("aria-label", b.title); b.setAttribute("aria-pressed", "false");
+        b.onclick = () => { const same = state.col === th.cellIndex && state.dir === dir; state.col = same ? -1 : th.cellIndex; state.dir = same ? 0 : dir; apply(); };
+        buttons.push(b); box.appendChild(b);
+      });
+      th.appendChild(box);
+    }));
+  });
+})();</script>
+<script>
+(async () => {
+  const list = document.getElementById("topics"), form = document.getElementById("add-topic"),
+        msg = document.getElementById("topics-msg"), rform = document.getElementById("add-repo"),
+        rmsg = document.getElementById("requests-msg"),
+        known = new Set(window.KNOWN_REPOS || []), key = u => u.toLowerCase().replace(/\/+$/, "");
+  let state;
+  try {  // opened as a plain file, or the site has no GitHub token yet: stay a read-only page
+    const res = await fetch("/dashboard/api/state");
+    if (!res.ok) throw new Error();
+    state = await res.json();
+  } catch (err) { return; }
+  let busy = false;
+  const say = (t, where) => { (where || msg).textContent = t; };
+  const lines = t => t.split("\n").map(s => s.trim()).filter(Boolean);
+  const el = (tag, props) => Object.assign(document.createElement(tag), props || {});
+  async function save(done, where) {
+    if (busy) return;
+    busy = true;
+    say("Saving...", where);
+    try {
+      const res = await fetch("/dashboard/api/state", {method: "POST", headers: {"Content-Type": "application/json"},
+                                                       body: JSON.stringify({topics: state.topics, requests: state.requests, removed: state.removed || [], apps: state.apps || [], favorites: state.favorites || []})});
+      const body = await res.json();
+      if (!res.ok) throw new Error(body.error || res.status);
+      state = body;
+      say(done, where);
+    } catch (err) { say("Could not save: " + err.message, where); }
+    busy = false;
+    draw();
+  }
+  (() => {  // My apps: add one, remove one
+    const form = document.getElementById("add-app"), list = document.getElementById("app-list"), amsg = document.getElementById("apps-msg");
+    if (!form) return;
+    form.hidden = false;
+    const key = u => u.toLowerCase().replace(/\/+$/, "");
+    const drawApps = () => {
+      for (const li of list.querySelectorAll("li[data-url]")) {
+        if (li.querySelector("button")) continue;
+        const b = el("button", {type: "button", className: "remove", textContent: "Remove"});
+        b.onclick = () => { state.apps = (state.apps || []).filter(a => key(a.url || a.site) !== key(li.dataset.url)); li.remove(); save("Removed.", amsg); };
+        li.append(b);
+      }
+    };
+    form.addEventListener("submit", ev => {
+      ev.preventDefault();
+      // forgiving: "mysite.com", "www.mysite.com" and "http://..." all become https://...
+      const web = v => { v = v.trim().replace(/\/+$/, ""); return !v ? "" : /^https?:\/\//i.test(v) ? v.replace(/^http:/i, "https:") : "https://" + v; };
+      const url = web(document.getElementById("app-url").value).replace(/\.git$/, ""),
+            site = web(document.getElementById("app-site").value), pitch = document.getElementById("app-pitch").value.trim();
+      if (!url && !site) return say("Add a GitHub link, a website, or both.", amsg);
+      if (url && !/^https:\/\/github\.com\/[\w.-]+\/[\w.-]+$/.test(url)) return say("The GitHub link should look like https://github.com/you/app.", amsg);
+      if (site && !/^https:\/\/\S+$/.test(site)) return say("The website must start with https://", amsg);
+      const id = url || site;
+      if ((state.apps || []).some(a => key(a.url || a.site) === key(id))) return say("That app is already in the list.", amsg);
+      state.apps = [...(state.apps || []), {url, site, pitch}];
+      const li = el("li"); li.dataset.url = id;
+      li.append(Object.assign(el("a", {href: id, target: "_blank", rel: "noopener", textContent: url ? url.split("github.com/")[1] : site.replace(/^https:\/\/(www\.)?/, "")})));
+      if (pitch) li.append(el("small", {textContent: pitch}));
+      li.append(el("span", {className: "pill planned", textContent: "not posted yet"}));
+      list.querySelector("li.none")?.remove(); list.append(li); drawApps(); form.reset();
+      save("Added. It joins the rotation at the next run.", amsg);
+    });
+    // the saved list is the truth: add apps saved since this page was built, drop ones removed since
+    const saved = state.apps || [], ids = new Set(saved.map(a => key(a.url || a.site)));
+    for (const li of list.querySelectorAll("li[data-url]")) if (!ids.has(key(li.dataset.url))) li.remove();
+    const shown = new Set([...list.querySelectorAll("li[data-url]")].map(li => key(li.dataset.url)));
+    for (const a of saved) {
+      const id = a.url || a.site;
+      if (shown.has(key(id))) continue;
+      const li = el("li"); li.dataset.url = id;
+      li.append(el("a", {href: id, target: "_blank", rel: "noopener",
+                         textContent: a.url ? a.url.split("github.com/")[1] : a.site.replace(/^https:\/\/(www\.)?/, "")}));
+      if (a.pitch) li.append(el("small", {textContent: a.pitch}));
+      li.append(el("span", {className: "pill planned", textContent: "not posted yet"}));
+      list.append(li);
+    }
+    if (saved.length) list.querySelector("li.none")?.remove();
+    drawApps();
+  })();
+  function card(r, i) {
+    const li = el("li"), name = el("input", {value: r.name, id: "t-name-" + i, maxLength: 60}),
+          qs = el("textarea", {id: "t-q-" + i, rows: Math.max(3, r.queries.length), value: r.queries.join("\n")}),
+          acts = el("div", {className: "acts"}), t = state.topics;
+    name.setAttribute("aria-label", "Topic name");
+    qs.setAttribute("aria-label", "GitHub search terms, one per line");
+    const dirty = () => li.classList.add("dirty");
+    name.addEventListener("input", dirty); qs.addEventListener("input", dirty);
+    const btn = (label, fn, off, cls) => {
+      const b = el("button", {type: "button", textContent: label, disabled: !!off, className: cls || ""});
+      b.addEventListener("click", fn); acts.append(b); return b;
+    };
+    const move = (to, done) => { t.splice(to, 0, t.splice(i, 1)[0]); save(done); };
+    btn("Save", () => {
+      const q = lines(qs.value);
+      if (!name.value.trim() || !q.length) return say("A topic needs a name and at least one search term.");
+      li.classList.remove("dirty");
+      t[i] = {name: name.value.trim(), queries: q};
+      save("Saved. It applies at the next run.");
+    }, false, "primary");
+    btn("To top", () => move(0, "Moved to the top."), i === 0);
+    btn("Up", () => move(i - 1, "Order saved. It applies at the next run."), i === 0);
+    btn("Down", () => move(i + 1, "Order saved. It applies at the next run."), i === t.length - 1);
+    const del = btn("Delete", () => {
+      if (del.dataset.armed) { t.splice(i, 1); return save("Deleted."); }
+      del.dataset.armed = "1"; del.textContent = "Really delete?";
+    }, t.length === 1, "remove");
+    li.append(el("span", {className: "rank", textContent: "Priority " + (i + 1)}), name, qs, acts);
+    return li;
+  }
+  // Favorites: the star beside a repo. Starred repos are posted more often (see CLAUDE.md); it applies at the next run.
+  const starBtn = u => {
+    const b = el("button", {type: "button", className: "star", title: "Favorite: posted more often"});
+    b.dataset.fav = u;
+    return b;
+  };
+  function paintStars() {
+    const on = new Set((state.favorites || []).map(key));
+    document.querySelectorAll("button.star[data-fav]").forEach(b => {
+      const f = on.has(key(b.dataset.fav));
+      b.hidden = false;
+      b.textContent = f ? "★" : "☆";
+      b.classList.toggle("on", f);
+      b.setAttribute("aria-pressed", String(f));
+      if (b.dataset.wired) return;
+      b.dataset.wired = "1";
+      b.addEventListener("click", ev => {
+        ev.preventDefault(); ev.stopPropagation();  // inside a post's summary: do not open or close the details
+        const u = b.dataset.fav, had = (state.favorites || []).some(x => key(x) === key(u));
+        state.favorites = had ? state.favorites.filter(x => key(x) !== key(u)) : [...(state.favorites || []), u];
+        paintStars();
+        save(had ? "Removed from your favorites." : "Favorite saved. It is posted more often from the next run.", rmsg);
+      });
+    });
+  }
+  function draw() {
+    if (!list.querySelector(".dirty")) {  // never wipe out something being typed
+      list.classList.add("edit");
+      list.replaceChildren(...state.topics.map(card));
+    }
+    // the Up next table: requests saved here but not yet queued go on top as "waiting", each with a Remove button,
+    // and waiting rows already in the queue get a Remove button too (it takes effect at the next run)
+    const qt = document.querySelector("table.queue");
+    if (!qt) return paintStars();
+    qt.querySelectorAll("tr[data-pending], tr.none").forEach(r => r.remove());
+    const removed = new Set((state.removed || []).map(key));
+    const removeBtn = fn => {
+      const b = el("button", {type: "button", textContent: "Remove", className: "remove"});
+      b.addEventListener("click", fn);
+      return b;
+    };
+    const head = qt.querySelector("tr");
+    for (const u of state.requests.filter(u => !known.has(key(u))).reverse()) {
+      const tr = el("tr"), a = el("a", {href: u, textContent: u.replace("https://github.com/", "")}), st = el("td");
+      tr.dataset.pending = u;
+      st.append(el("span", {className: "pill waiting", textContent: "waiting"}), " ",
+                removeBtn(() => { state.requests = state.requests.filter(x => x !== u); save("Removed.", rmsg); }),
+                el("small", {textContent: "joins the queue at the next run"}));
+      const c1 = el("td"); c1.append(starBtn(u), a);
+      tr.append(c1, el("td", {textContent: "dashboard"}), el("td", {className: "n", textContent: ""}), el("td", {className: "n", textContent: "just now"}), st);
+      head.after(tr);
+    }
+    document.querySelectorAll("table.queue tr[data-waiting]").forEach(tr => {
+      const u = tr.dataset.waiting, st = tr.lastElementChild;
+      st.querySelectorAll("button.remove, small.gone").forEach(x => x.remove());
+      if (removed.has(key(u))) return st.append(el("small", {className: "gone", textContent: "removed: it leaves the queue at the next run"}));
+      st.append(" ", removeBtn(() => { state.removed = [...(state.removed || []), u]; save("Removed. It leaves the queue at the next run.", rmsg); }));
+    });
+    paintStars();
+  }
+  form.hidden = false; rform.hidden = false;
+  draw();
+  form.addEventListener("submit", ev => {
+    ev.preventDefault();
+    const name = document.getElementById("new-name"), qs = document.getElementById("new-queries"), q = lines(qs.value);
+    if (!name.value.trim() || !q.length) return say("A topic needs a name and at least one search term.");
+    state.topics.unshift({name: name.value.trim(), queries: q});
+    name.value = ""; qs.value = "";
+    save("Added at the top. It applies at the next run.");
+  });
+  function add(url) {
+    if (known.has(key(url)) || state.requests.some(u => key(u) === key(url)))
+      return say("That one is already queued or was already posted.", rmsg);
+    state.requests.push(url);
+    document.getElementById("new-repo").value = "";
+    document.getElementById("matches").replaceChildren();
+    save("Added. It joins the queue at the next run.", rmsg);
+  }
+  rform.addEventListener("submit", async ev => {
+    ev.preventDefault();
+    const box = document.getElementById("new-repo"), out = document.getElementById("matches"),
+          m = box.value.match(/github\.com\/([\w.-]+)\/([\w.-]+)/i);  // anywhere in the paste: tracking junk is fine
+    if (m) return add("https://github.com/" + m[1] + "/" + m[2].replace(/\.git$/, "").replace(/\.+$/, ""));
+    if (!box.value.trim()) return say("Type a GitHub link, a website, or the repo's name.", rmsg);
+    say("Looking it up on GitHub...", rmsg);
+    let found = [];
+    try {
+      const r = await fetch("api/find?q=" + encodeURIComponent(box.value.trim()));
+      found = r.ok ? await r.json() : [];
+    } catch (e) { found = []; }
+    // something that looks like a web address can also be posted as a website, with no GitHub repo
+    const typed = box.value.trim(), looksWeb = /^(https?:\/\/)?[\w-]+(\.[\w-]+)+(\/\S*)?$/i.test(typed);
+    const site = looksWeb ? (/^https?:\/\//i.test(typed) ? typed.replace(/^http:/i, "https:") : "https://" + typed).replace(/\/+$/, "") : "";
+    const choices = found.map(f => {
+      const li = el("li"), b = el("button", {type: "button", textContent: "Add this one", className: "primary"});
+      b.addEventListener("click", () => add(f.url));
+      li.append(el("a", {href: f.url, target: "_blank", rel: "noopener", className: "name", textContent: f.name + " ↗"}),
+                el("small", {textContent: "★ " + f.stars.toLocaleString() + " · " + (f.description || "")}), b);
+      return li;
+    });
+    if (site) {
+      const li = el("li"), b = el("button", {type: "button", textContent: "Post this website", className: "primary"});
+      b.addEventListener("click", () => add(site));
+      li.append(el("a", {href: site, target: "_blank", rel: "noopener", className: "name", textContent: site.replace(/^https:\/\//, "") + " ↗"}),
+                el("small", {textContent: "The website itself, no GitHub repo: the post is written from the site."}), b);
+      choices.push(li);
+    }
+    if (!choices.length) return say("Nothing on GitHub matched that. Try the repo's name, its link, or a website address.", rmsg);
+    say(found.length ? "Is it one of these? Click a name to open it, then add the right one." : "No GitHub repo matched, but you can post the website itself.", rmsg);
+    out.replaceChildren(...choices);
+  });
+})();
+(() => {  // colour cues for every table: zeros fade; in ranked tables the best of each column turns green
+  for (const td of document.querySelectorAll("td.n")) if (/^[-–]?$|^0([.]0+)?$/.test(td.textContent.trim())) td.classList.add("zero");
+  for (const td of document.querySelectorAll("table.wins td.n")) if (!td.classList.contains("zero")) td.classList.add("best");
+  for (const t of document.querySelectorAll("table.rank")) {
+    const rows = [...t.querySelectorAll("tr")].slice(1), cols = rows[0] ? rows[0].children.length : 0;
+    for (let c = 0; c < cols; c++) {
+      const cells = rows.map(r => r.children[c]).filter(td => td && td.classList.contains("n") && !td.closest("tr").querySelector("th"));
+      const val = td => parseFloat(td.textContent.replace(/,/g, "")) || 0, best = Math.max(0, ...cells.map(val));
+      if (best > 0 && t.querySelector("tr").children[c].textContent !== "Posts") cells.forEach(td => { if (val(td) === best) td.classList.add("best"); });
+    }
+  }
+})();
+</script>
+</body></html>
