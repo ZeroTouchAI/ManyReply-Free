@@ -10,3 +10,7 @@ jobs:
           python-version: "3.12"
       - run: python test_manyreply.py
       - run: python test_writer.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --test tests/lib.test.mjs

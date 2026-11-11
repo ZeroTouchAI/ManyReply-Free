@@ -23,6 +23,26 @@ are the only things involved, and there is no server of ours in the middle.
 **You bring your own AI key.** Choose Anthropic, OpenAI, Gemini, OpenRouter, a local Ollama model, or any
 OpenAI-compatible server. A post is one request of a few thousand words, so a day's post costs very little.
 
+## The DM dashboard (no carousels, nothing to install)
+
+If you already make your own posts and only want the "comment a word, get the link" part, use the dashboard in `docs/`.
+It is a static page that talks straight to Zernio from your browser:
+
+1. Connect your Instagram in [Zernio](https://zernio.com) and create an API key.
+2. Open the dashboard, paste the key, pick a post (or paste its link), type the word and the link people should get.
+3. End your post with "Comment WORD for the link". Everyone who comments it gets your link by DM, and people who don't
+   follow you yet are asked to follow first.
+
+Your key is stored only in your browser (this tab, unless you tick "keep me connected") and is sent only to zernio.com.
+The page's content security policy forbids it from talking to anyone else.
+
+**Publish your own copy:** fork this repository, then in **Settings, Pages** choose **Deploy from a branch**, branch
+`main`, folder `/docs`. To use your own Zernio partner link on the sign-up button, put it in `docs/config.js`; a
+disclosure that it is a referral link then appears next to the button. Leave it empty and the button goes to plain
+zernio.com. Run the logic tests with `node --test tests/lib.test.mjs`.
+
+Fonts (Bricolage Grotesque and Figtree) are self-hosted under the SIL Open Font License; the licences are in `docs/fonts/`.
+
 ## Set up on GitHub (recommended: no server, no PC switched on)
 
 1. Click **Use this template** at the top of this page, create the copy as **Private** (your ledger and numbers will live
