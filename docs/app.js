@@ -38,7 +38,7 @@
     document.body.append(t);
     setTimeout(() => t.remove(), 3200);
   }
-  const safeImg = (u) => (/^https:\/\//i.test(u || '') ? u : '');
+  const safeImg = (u) => (/^(https:\/\/|data:image\/svg\+xml)/i.test(u || '') ? u : '');
   const when = (iso) => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); };
 
   // The key lives in this browser only: this tab by default, or this device if the person asks.
@@ -253,14 +253,14 @@
       actions.replaceChildren(
         el('label', { class: 'switch' }, toggle, el('i'), text),
         MR.isEditable(a) ? el('a', { class: 'btn quiet small', href: '#/edit/' + encodeURIComponent(a.id) }, 'Edit') : el('span', { class: 'hint', title: 'This word was made outside this dashboard, so it can only be paused or deleted here.' }, 'Made elsewhere'),
-        confirming
+        ...(confirming
           ? [el('button', { class: 'btn quiet small danger', type: 'button', onclick: async (e) => {
                 e.target.disabled = true;
                 try { await S.client.remove(a.id); S.automations = S.automations.filter((x) => x.id !== a.id); row.remove(); toast('Deleted'); if (!S.automations.length) homeView(); }
                 catch (err) { toast(err.message); e.target.disabled = false; }
               } }, 'Yes, delete'),
              el('button', { class: 'btn quiet small', type: 'button', onclick: () => drawActions(false) }, 'Keep')]
-          : el('button', { class: 'btn quiet small danger', type: 'button', onclick: () => drawActions(true) }, 'Delete'));
+          : [el('button', { class: 'btn quiet small danger', type: 'button', onclick: () => drawActions(true) }, 'Delete')]));
     };
     drawActions(false);
     row.append(

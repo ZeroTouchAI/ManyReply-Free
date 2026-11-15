@@ -7,6 +7,14 @@
   var note = document.getElementById('disclosure');
   if (note && url) note.hidden = false; // only say "referral" when there is a referral link
 
+  // "Try the demo": the dashboard opens on sample data, nothing is sent anywhere
+  document.querySelectorAll('[data-demo]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      try { sessionStorage.setItem('mrdm.key', 'demo-key'); } catch (err) { return; } // no storage: fall through to the plain dashboard link
+      e.preventDefault(); location.href = 'app/';
+    });
+  });
+
   var steps = document.querySelectorAll('.phone .step');
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduce) return; // the finished chat is already showing

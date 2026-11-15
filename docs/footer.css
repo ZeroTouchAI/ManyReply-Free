@@ -3,3 +3,9 @@
 .site-foot a { color: var(--blue, #1A6BFF); font-weight: 600; text-underline-offset: 3px; }
 .site-foot .more { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.2rem 1rem; }
 .site-foot .more span { color: var(--ink, #162033); font-weight: 700; }
+
+/* Demo mode */
+.demo-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.4rem 1rem; padding: 0.6rem 1rem; background: var(--hl, #FFE14D); color: var(--on-hl, #162033); font: 600 0.9rem/1.4 var(--body, system-ui, sans-serif); text-align: center; }
+.demo-bar button { min-height: 36px; padding: 0.2rem 0.9rem; border-radius: 10px; border: 1.5px solid currentColor; background: transparent; color: inherit; font: 700 0.9rem var(--body, system-ui, sans-serif); cursor: pointer; }
+.demo-link { text-align: center; padding: 0.4rem 1rem 0; font: 600 0.95rem/1.4 var(--body, system-ui, sans-serif); }
+.demo-link a { color: var(--blue, #1A6BFF); text-underline-offset: 3px; }
