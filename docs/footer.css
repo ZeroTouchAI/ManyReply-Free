@@ -1,0 +1,5 @@
+/* Shared footer: the makers' other products, the version, and credit. Used by the home page and the dashboard. */
+.site-foot { max-width: 1180px; margin: 0 auto; padding: 1.2rem 1.25rem 3rem; border-top: 1px solid var(--line, #D3DBE4); display: grid; gap: 0.5rem; text-align: center; color: var(--muted, #566478); font: 400 0.92rem/1.6 var(--body, system-ui, sans-serif); }
+.site-foot a { color: var(--blue, #1A6BFF); font-weight: 600; text-underline-offset: 3px; }
+.site-foot .more { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.2rem 1rem; }
+.site-foot .more span { color: var(--ink, #162033); font-weight: 700; }

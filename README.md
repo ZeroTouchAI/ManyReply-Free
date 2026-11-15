@@ -25,8 +25,9 @@ OpenAI-compatible server. A post is one request of a few thousand words, so a da
 
 ## The DM dashboard (no carousels, nothing to install)
 
-If you already make your own posts and only want the "comment a word, get the link" part, use the dashboard in `docs/`.
-It is a static page that talks straight to Zernio from your browser:
+If you already make your own posts and only want the "comment a word, get the link" part, use the dashboard in
+`docs/app/`. `docs/` itself is a one-page home page for it. Both are static pages, and the dashboard talks straight to
+Zernio from your browser:
 
 1. Connect your Instagram in [Zernio](https://zernio.com) and create an API key.
 2. Open the dashboard, paste the key, pick a post (or paste its link), type the word and the link people should get.

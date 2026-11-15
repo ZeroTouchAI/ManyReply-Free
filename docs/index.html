@@ -3,19 +3,158 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ManyReply DM: send a link to everyone who comments your word</title>
-<meta name="description" content="Pick a word. When someone comments it on your Instagram post, they get your link by DM. Free, and your key never leaves your browser.">
+<title>ManyReply DM: turn a comment into a DM</title>
+<meta name="description" content="Pick a keyword. Anyone who comments it on your Instagram post gets your link in a DM, automatically. Free and open source, and your key never leaves your browser.">
 <meta name="referrer" content="no-referrer">
-<!-- This page holds an API key, so it may only run its own scripts and talk to zernio.com. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' https: data:; connect-src https://zernio.com; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%231A6BFF'/%3E%3Crect x='6' y='7' width='14' height='9' rx='4.5' fill='%23FFE14D'/%3E%3Crect x='12' y='17' width='14' height='8' rx='4' fill='%23fff'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="footer.css">
 </head>
 <body>
-<div id="app"><p class="boot">Loading ManyReply DM…</p></div>
-<noscript><p class="boot">ManyReply DM needs JavaScript. It runs entirely in your browser.</p></noscript>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <a class="brand" href="./" aria-label="ManyReply DM home">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#1A6BFF"/><rect x="6" y="7" width="14" height="9" rx="4.5" fill="#FFE14D"/><rect x="12" y="17" width="14" height="8" rx="4" fill="#fff"/></svg>
+    <span>ManyReply <b>DM</b></span>
+  </a>
+  <nav class="nav-actions" aria-label="Main">
+    <a class="btn primary small" href="app/">Open the dashboard <span aria-hidden="true">→</span></a>
+    <a class="btn ghost small gh" href="https://github.com/ZeroTouchAI/ManyReply-Free" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+      <span>View on GitHub</span>
+    </a>
+  </nav>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="hero-copy">
+      <h1>Turn a comment <br>into a <span class="mark">DM</span></h1>
+      <p class="lead">Pick a keyword. Anyone who comments that word on your Instagram post gets your link in a DM, automatically. People who don’t follow you yet are asked to follow first.</p>
+      <div class="cta-row">
+        <a class="btn primary big" href="app/">Open the dashboard <span aria-hidden="true">→</span></a>
+        <a class="btn ghost big" href="#how">See how it works</a>
+      </div>
+      <p class="fine">Free and open source. Your key stays in your browser.</p>
+    </div>
+
+    <div class="stage" aria-hidden="true">
+      <div class="phone">
+        <div class="phone-top"><i class="notch"></i></div>
+        <div class="screen">
+          <div class="bar"><span class="av">y</span><b>yourhandle</b></div>
+          <div class="msgs">
+            <div class="cmt step"><span class="av gray">a</span><p><b>alex.rivera</b> <span class="mark">GUIDE</span></p></div>
+            <div class="cmt step reply"><span class="av">y</span><p><b>yourhandle</b> @alex.rivera Sent to your DMs</p></div>
+            <div class="rule step">Direct message</div>
+            <div class="bubble step">Here you go Alex! Tap the button to open it.</div>
+            <div class="pbtn step">Open the link</div>
+          </div>
+        </div>
+      </div>
+      <svg class="spark" viewBox="0 0 60 60"><path d="M6 14 L36 6 M10 32 L52 32 M6 50 L36 58" stroke="currentColor" stroke-width="6" stroke-linecap="round" fill="none"/></svg>
+    </div>
+  </section>
+
+  <section class="how" id="how" aria-labelledby="how-h">
+    <h2 id="how-h">How it works</h2>
+    <ol class="steps">
+      <li>
+        <span class="num">1</span>
+        <svg class="ico" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="6"/><path d="M24 4v6M24 38v6M4 24h6M38 24h6M9.9 9.9l4.2 4.2M33.9 33.9l4.2 4.2M9.9 38.1l4.2-4.2M33.9 14.1l4.2-4.2"/></svg>
+        <h3>Connect Zernio</h3>
+        <p>Add your Zernio API key in the dashboard.</p>
+      </li>
+      <li class="arrow" aria-hidden="true">→</li>
+      <li>
+        <span class="num">2</span>
+        <svg class="ico" viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="8" width="36" height="32" rx="5"/><circle cx="17" cy="19" r="3.5"/><path d="M8 36l11-10 8 7 6-5 9 8"/></svg>
+        <h3>Pick a post and a word</h3>
+        <p>Choose an Instagram post and a keyword, like GUIDE.</p>
+      </li>
+      <li class="arrow" aria-hidden="true">→</li>
+      <li>
+        <span class="num">3</span>
+        <svg class="ico" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 10h32a3 3 0 0 1 3 3v18a3 3 0 0 1-3 3H22l-9 8v-8H8a3 3 0 0 1-3-3V13a3 3 0 0 1 3-3Z"/><path d="M16 22h.01M24 22h.01M32 22h.01" stroke-width="4"/></svg>
+        <h3>End your post</h3>
+        <p>Add “Comment <span class="mark sm">WORD</span> for the link”.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="get" aria-labelledby="get-h">
+    <h2 id="get-h">What you get</h2>
+    <ul class="features">
+      <li>
+        <svg class="ico" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="16" r="8"/><path d="M8 42c1-9 8-14 16-14s15 5 16 14"/></svg>
+        <h3>Followers-only gate</h3><p>Non-followers are asked to follow first, then get the link.</p>
+      </li>
+      <li>
+        <svg class="ico" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 10h32a3 3 0 0 1 3 3v18a3 3 0 0 1-3 3H22l-9 8v-8H8a3 3 0 0 1-3-3V13a3 3 0 0 1 3-3Z"/></svg>
+        <h3>Public reply</h3><p>A reply is posted under their comment, so they know to check their DMs.</p>
+      </li>
+      <li>
+        <svg class="ico" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 42V26h8v16M20 42V12h8v30M32 42V20h8v22"/></svg>
+        <h3>Link click tracking</h3><p>See comments, DMs sent, link clicks and new followers.</p>
+      </li>
+      <li>
+        <svg class="ico" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="17"/><path d="M24 13v11l7 5"/></svg>
+        <h3>A delay option</h3><p>Send right away, or wait a little. You choose.</p>
+      </li>
+    </ul>
+    <p class="also"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><path d="M6.5 12.5l4 4 7-8" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Works on one post or on any post. Add a second button if you need one.</p>
+  </section>
+
+  <section class="band private" aria-labelledby="priv-h">
+    <svg class="ico big" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 4l16 6v12c0 11-7 18-16 22C15 40 8 33 8 22V10l16-6Z"/><rect x="17" y="21" width="14" height="11" rx="2.5" class="fill"/><path d="M20 21v-4a4 4 0 0 1 8 0v4"/></svg>
+    <div>
+      <h2 id="priv-h">Free and private</h2>
+      <p>ManyReply DM is free software. There is no server and no account with us: your Zernio key stays in your browser and is sent only to zernio.com. It’s open source, so you can read every line and run your own copy.</p>
+    </div>
+  </section>
+
+  <section class="band cost" aria-labelledby="cost-h">
+    <svg class="ico big" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19"/><path d="M24 22v13M24 15h.01" stroke-width="4"/></svg>
+    <div>
+      <h2 id="cost-h">Honest cost</h2>
+      <p>ManyReply DM is <b>free</b>. <b>Zernio</b> is a separate service with its own pricing. Its first two connected accounts are free; check their pricing page for the details.</p>
+      <p class="fine disclose" id="disclosure" hidden>Some links on this page are referral links. If you sign up to Zernio through them, the maker of this tool earns a commission, and your price stays the same.</p>
+      <p><a class="link" data-zernio href="https://zernio.com" rel="noopener sponsored">Create a Zernio account</a></p>
+    </div>
+  </section>
+
+  <section class="faq" aria-labelledby="faq-h">
+    <h2 id="faq-h">Questions</h2>
+    <details><summary>Is it really free?</summary><p>Yes. The software is free and open source (MIT). Zernio, the service that connects to Instagram, is separate and has its own pricing; its first two connected accounts are free.</p></details>
+    <details><summary>Where does my API key go?</summary><p>It stays in your browser (this tab, unless you tick “keep me connected on this device”) and is sent only to zernio.com. There is no server of ours in the middle, and the page is built so it can’t talk to anyone else.</p></details>
+    <details><summary>Do I have to ask people to follow first?</summary><p>No. It’s one switch. Leave it on and non-followers are asked to follow before they get the link; turn it off and everyone gets the link right away.</p></details>
+    <details><summary>What if I don’t have a Zernio account?</summary><p>Create one at zernio.com, connect your Instagram business or creator account, and make an API key. The dashboard walks you through it.</p></details>
+    <details><summary>Does it work on Reels?</summary><p>You can paste a Reel link or pick it from your recent posts. We haven’t tested Reels yet, so try one first; “Any post” is the fallback.</p></details>
+    <details><summary>Is it affiliated with Instagram or Meta?</summary><p>No. ManyReply DM is an independent tool built on Zernio. It is not affiliated with or endorsed by Instagram, Meta or Zernio.</p></details>
+  </section>
+
+  <section class="final" aria-labelledby="final-h">
+    <div>
+      <h2 id="final-h">Ready to get started?</h2>
+      <p>Open the dashboard and set up your first keyword.</p>
+    </div>
+    <div class="final-actions">
+      <a class="btn primary big" href="app/">Open the dashboard <span aria-hidden="true">→</span></a>
+      <a class="link light" href="https://github.com/ZeroTouchAI/ManyReply-Free" rel="noopener">View on GitHub</a>
+    </div>
+  </section>
+</main>
+
+<footer class="foot"><p>Built on Zernio. Not affiliated with Instagram, Meta or Zernio.</p></footer>
+
+<footer class="site-foot">
+  <p class="more"><span>More from the makers:</span> <a href="https://carinly.com/?utm_source=higgsview&amp;utm_medium=referral" rel="noopener">Carinly</a> <a href="https://effortlesssocialmedia.zerotouchai.com/?utm_source=higgsview&amp;utm_medium=referral" rel="noopener">Effortless Social Media</a> <a href="https://effortlesscoldcalling.zerotouchai.com/?utm_source=higgsview&amp;utm_medium=referral" rel="noopener">Effortless Cold Calling</a> <a href="https://effortlessugc.netlify.app/?utm_source=higgsview&amp;utm_medium=referral" rel="noopener">Effortless UGC</a></p>
+  <p>Version 1.0.0 · Powered by <a href="https://zerotouchai.com" rel="noopener">ZeroTouchAI.com</a></p>
+</footer>
+
 <script src="config.js"></script>
-<script src="lib.js"></script>
-<script src="app.js"></script>
+<script src="home.js"></script>
 </body>
 </html>
