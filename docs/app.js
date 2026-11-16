@@ -200,7 +200,11 @@
     return S.posts;
   }
 
-  async function homeView(id) {
+  async function homeView(id = renderId) {
+    if (window.MRDash) {
+      return window.MRDash.home({ S, el, toast, go, signOut, wordRow, loadAutomations, loadPosts, keep, clip: MR.clip,
+        isCurrent: () => id === renderId, mount: (node) => shell(node, true) });
+    }
     const list = el('div', { class: 'words', 'aria-busy': 'true' }, el('div', { class: 'skeleton' }), el('div', { class: 'skeleton' }));
     const picker = S.accounts.length > 1 && el('select', { class: 'select', 'aria-label': 'Instagram account', style: 'width:auto', onchange: (e) => {
       S.account = S.accounts.find((a) => a._id === e.target.value); keep.account(S.account._id); S.automations = null; S.posts = null; go('#/');

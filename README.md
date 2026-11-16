@@ -146,3 +146,12 @@ the right to use); without any, they are silent.
 ## License
 
 MIT. No warranty: you are responsible for what your accounts post.
+
+## Analytics in the DM dashboard (v1.1)
+
+The dashboard in `docs/app/` now has the full analytics view: followers, reach, last updated, a light/dark/auto theme button, period tabs (24 hours to 1 year), Performance by type, Top posts, Growth, a Posted list with every number per post, What's working, and your Comment words.
+
+- **Needs Zernio analytics.** Usage-based Zernio plans include it. Older plans need Zernio's Analytics add-on; without it the dashboard says so and the words still work.
+- **Word numbers are all time.** Zernio keeps running totals for each word (comments, DMs sent, link clicks), not daily ones, so those tiles do not change with the period tabs.
+- **Try it first.** "Try the demo" runs all of this on sample data with no Zernio account.
+- Follower history is limited to the last 89 days (a Zernio limit).

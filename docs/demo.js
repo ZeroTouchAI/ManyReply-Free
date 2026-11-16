@@ -70,6 +70,10 @@
   MR.createClient = function (key) {
     if (key !== MARK) return real.apply(MR, arguments);
     return {
+      call: function (method, path) {
+        var D = window.MRDemoData;
+        return wait(D ? D.respond(method, path) : {});
+      },
       accounts: function () { return wait([clone(account)]); },
       posts: function () { return wait(clone(posts)); },
       automations: function () { return wait(clone(autos)); },
