@@ -62,6 +62,10 @@
     return n.firstChild;
   }
   function shell(content, signedIn) {
+    if (signedIn && S.account && window.MRDash) { // the sidebar frame from the original design: your account and Disconnect sit at its bottom
+      root.replaceChildren(window.MRDash.frame({ S, el, go, signOut, keep }, el('div', { class: 'editor-wrap' }, content), false));
+      return;
+    }
     const top = el('header', { class: 'topbar' },
       el('a', { class: 'brand', href: '#/' }, logo(), 'ManyReply', el('small', null, 'DM')),
       signedIn && S.account && el('div', { class: 'who' }, el('span', null, 'Connected as ', el('strong', null, '@' + S.account.username)),
@@ -203,7 +207,7 @@
   async function homeView(id = renderId) {
     if (window.MRDash) {
       return window.MRDash.home({ S, el, toast, go, signOut, wordRow, loadAutomations, loadPosts, keep, clip: MR.clip,
-        isCurrent: () => id === renderId, mount: (node) => shell(node, true) });
+        isCurrent: () => id === renderId, mountApp: (node) => root.replaceChildren(node) });
     }
     const list = el('div', { class: 'words', 'aria-busy': 'true' }, el('div', { class: 'skeleton' }), el('div', { class: 'skeleton' }));
     const picker = S.accounts.length > 1 && el('select', { class: 'select', 'aria-label': 'Instagram account', style: 'width:auto', onchange: (e) => {

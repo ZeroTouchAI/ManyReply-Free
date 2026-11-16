@@ -58,6 +58,7 @@
   var autos = [
     made({ words: 'GUIDE' }, posts[4], { triggered: 128, dmsSent: 119, linkClicks: 64, followGatePassed: 37 }),
     made({ words: 'FREE', gate: false, linkLabel: 'Get it free' }, null, { triggered: 41, dmsSent: 40, linkClicks: 22, followGatePassed: 0 }),
+    made({ words: 'CHECKLIST', linkUrl: 'https://example.com/checklist' }, { id: 'demo-p15', message: 'Customer story: from 0 to 1k (2)' }, { triggered: 57, dmsSent: 55, linkClicks: 31, followGatePassed: 18 }),
     Object.assign(made({ words: 'PRICE' }, posts[2], { triggered: 9, dmsSent: 9, linkClicks: 3, followGatePassed: 2 }, false),
                   { buttons: [{ type: 'postback', title: 'See prices', payload: 'prices' }] }), // made elsewhere: shows the "Made elsewhere" state
   ];

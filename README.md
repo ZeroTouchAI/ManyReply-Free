@@ -147,11 +147,12 @@ the right to use); without any, they are silent.
 
 MIT. No warranty: you are responsible for what your accounts post.
 
-## Analytics in the DM dashboard (v1.1)
+## The DM dashboard (v1.2)
 
-The dashboard in `docs/app/` now has the full analytics view: followers, reach, last updated, a light/dark/auto theme button, period tabs (24 hours to 1 year), Performance by type, Top posts, Growth, a Posted list with every number per post, What's working, and your Comment words.
+The dashboard in `docs/app/` follows the layout of the original ManyReply dashboard: a navy sidebar with your account and Disconnect at the bottom, a strip across the top (theme, @account and followers, people reached, last updated), then Posted, Analytics, Performance by type, Top posts, Growth, What's working, Words from older posts and Comment words.
 
-- **Needs Zernio analytics.** Usage-based Zernio plans include it. Older plans need Zernio's Analytics add-on; without it the dashboard says so and the words still work.
-- **Word numbers are all time.** Zernio keeps running totals for each word (comments, DMs sent, link clicks), not daily ones, so those tiles do not change with the period tabs.
+- **Every post shows how people reacted:** reach, views, likes, comments, saves, sends, follows, word comments and link clicks, with the full details one click away.
+- **Needs Zernio analytics.** Usage-based Zernio plans include it. Older plans need Zernio's Analytics add-on; without it the dashboard says so, and the words still work.
+- **Word numbers follow the post.** Zernio keeps running totals for each word, so a word's comments, DMs and link clicks are counted in the period its post was published, the same way the original dashboard does it.
+- **Growth:** click a day, or pick From and To dates, to see the posts around it. Follower history is limited to the last 89 days (a Zernio limit).
 - **Try it first.** "Try the demo" runs all of this on sample data with no Zernio account.
-- Follower history is limited to the last 89 days (a Zernio limit).

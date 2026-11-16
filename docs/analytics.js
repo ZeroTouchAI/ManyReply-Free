@@ -209,6 +209,63 @@
     return { day: rank((d) => DAYS[d.getDay()]), time: rank((d) => block(d.getHours())) };
   }
 
+
+  // ---------------------------------------------------------------- the tiles, the way the original dashboard counts them
+
+  /** The follower count on or before a day. */
+  function followersOn(series, day) { let v = null; for (const s of series || []) { if (s.date <= day) v = s.value; else break; } return v; }
+
+  /** Followers gained over the window that ends `back` days ago. {change, partial, since} or null when there is no history. */
+  function followerWindow(series, days, back, now) {
+    if (!series || series.length < 2) return null;
+    const end = followersOn(series, iso(now - back * DAY));
+    let start = followersOn(series, iso(now - (back + days) * DAY));
+    let partial = false, since = null;
+    if (start == null && back === 0) { start = series[0].value; partial = true; since = series[0].date; }
+    return end == null || start == null ? null : { change: end - start, partial, since };
+  }
+
+  /** One window of numbers. Word numbers come from the words on the posts published in the window, as in the original. */
+  function windowStats(posts, byPost, series, days, back, now) {
+    const ps = between(posts, now - (back + days) * DAY, now - back * DAY);
+    const t = totals(ps); let words = 0, dms = 0, clicks = 0, gate = 0;
+    for (const p of ps) { const s = postWords(p, byPost).stats; words += s.comments; dms += s.dms; clicks += s.clicks; gate += s.gatePassed; }
+    const f = followerWindow(series, days, back, now);
+    return { followers: f ? f.change : null, since: f && f.partial ? f.since : null, posts: ps.length, reach: t.reach, shares: t.shares, saves: t.saves, follows: t.follows,
+             words, dms, clicks, gate, views: t.views, likes: t.likes, comments: t.comments, reelViews: t.reelViews };
+  }
+  function tileWindows(posts, byPost, series, days, now) {
+    return { cur: windowStats(posts, byPost, series, days, 0, now), prev: days * 2 <= 365 ? windowStats(posts, byPost, series, days, days, now) : null };
+  }
+
+  const TYPE_NAME = { carousel: 'Carousel', reel: 'Reel', photo: 'Photo', other: 'Post' };
+
+  /** The "What's working" table: posts grouped by type, weekday, time of day and comment word, best average reach first. */
+  function whatsWorking(posts, byPost, now) {
+    const map = new Map();
+    const add = (group, value, p, words) => {
+      const k = group + '\u0000' + value; const e = map.get(k) || { group, value, posts: 0, reach: 0, words: 0, follows: 0 };
+      e.posts++; e.reach += p.reach; e.words += words; e.follows += p.follows; map.set(k, e);
+    };
+    for (const p of posts.filter((x) => x.t <= now - 3 * DAY)) {
+      const pw = postWords(p, byPost), d = new Date(p.t);
+      add('type', TYPE_NAME[group(p.type)], p, pw.stats.comments); add('day', DAYS[d.getDay()], p, pw.stats.comments); add('time', block(d.getHours()), p, pw.stats.comments);
+      for (const w of pw.words) add('word', w, p, pw.stats.comments);
+    }
+    return [...map.values()].map((e) => ({ group: e.group, value: e.value, posts: e.posts, avgReach: e.reach / e.posts, avgWords: e.words / e.posts, follows: e.follows }))
+      .sort((a, b) => b.avgReach - a.avgReach || b.posts - a.posts);
+  }
+
+  /** Words on posts older than `days` (or no longer in the analytics list), best first: clicks, then DMs, then comments. */
+  function olderWords(autos, posts, now, days) {
+    const recent = new Set(posts.filter((p) => p.t > now - (days || 30) * DAY && p.platformPostId).map((p) => p.platformPostId));
+    return (autos || []).filter((a) => a.platformPostId && !recent.has(a.platformPostId)).map((a) => {
+      const s = st(a); const b = (a.buttons || []).find((x) => x && x.url);
+      return { word: (a.keywords || []).join(', ') || '(any comment)', link: b ? b.url : '', ...s, active: a.isActive !== false };
+    }).sort((a, b) => b.clicks - a.clicks || b.dms - a.dms || b.comments - a.comments);
+  }
+
   return { DAY, PERIODS, TYPE_LABEL, num, iso, fmt, classify, normalizePost, needsAnalyticsAccess, fetchPosts, fetchFollowers, fetchReach, load,
-           totals, period, delta, followersChange, topPosts, perfByType, growth, wordsByPost, postWords, wordsWorking, whenWorks };
+           totals, period, delta, followersChange, topPosts, perfByType, growth, wordsByPost, postWords, wordsWorking, whenWorks,
+           followersOn, followerWindow, windowStats, tileWindows, whatsWorking, olderWords, TYPE_NAME };
 });

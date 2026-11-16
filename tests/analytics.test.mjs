@@ -113,3 +113,27 @@ test('posts are paged until a short page, and a repeated page stops the loop', a
   const call2 = async () => { k++; return { posts: k === 1 ? page(50) : Array.from({ length: 4 }, (_, i) => raw({ postId: 'b' + i })) }; };
   assert.equal((await A.fetchPosts(call2, 'a', NOW)).length, 54);
 });
+
+test('tiles: word numbers follow the posts published in the window, and followers come from the history', () => {
+  const mk = (d, id) => A.normalizePost(raw({ publishedAt: ago(d), platformAnalytics: [{ platformPostId: id, analytics: { reach: 10, views: 20, likes: 1, comments: 1, saves: 1, shares: 1, follows: 1 } }] }));
+  const posts = [mk(2, 'a'), mk(9, 'b'), mk(40, 'c')];
+  const autos = [{ keywords: ['A'], platformPostId: 'a', stats: { triggered: 5, dmsSent: 4, linkClicks: 3, followGatePassed: 2 } }, { keywords: ['B'], platformPostId: 'b', stats: { triggered: 9, dmsSent: 9, linkClicks: 9 } }];
+  const series = [{ date: '2026-11-01', value: 100 }, { date: '2026-11-08', value: 110 }, { date: '2026-11-15', value: 125 }];
+  const w = A.tileWindows(posts, A.wordsByPost(autos), series, 7, NOW);
+  assert.equal(w.cur.posts, 1); assert.equal(w.cur.words, 5); assert.equal(w.cur.dms, 4); assert.equal(w.cur.clicks, 3); assert.equal(w.cur.gate, 2);
+  assert.equal(w.prev.words, 9); assert.equal(w.cur.followers, 15); assert.equal(w.prev.followers, 10);
+  const yr = A.tileWindows(posts, A.wordsByPost(autos), series, 365, NOW);
+  assert.equal(yr.prev, null); assert.equal(yr.cur.followers, 25); assert.equal(yr.cur.since, '2026-11-01');
+  assert.equal(A.followerWindow([], 7, 0, NOW), null);
+});
+
+test("what's working groups by type, weekday, time and word; older words skip recent posts", () => {
+  const mk = (d, id, type, reach) => A.normalizePost(raw({ publishedAt: ago(d), mediaType: type, platformAnalytics: [{ platformPostId: id, analytics: { reach, follows: 1 } }] }));
+  const posts = [mk(10, 'a', 'carousel', 100), mk(11, 'b', 'image', 300), mk(1, 'c', 'carousel', 9999)];
+  const autos = [{ keywords: ['A'], platformPostId: 'a', stats: { triggered: 4 } }, { keywords: ['C'], platformPostId: 'c', stats: { triggered: 1 } }, { keywords: ['ANY'] }];
+  const rows = A.whatsWorking(posts, A.wordsByPost(autos), NOW);
+  assert.ok(rows.every((r) => ['type', 'day', 'time', 'word'].includes(r.group)));
+  const car = rows.find((r) => r.group === 'type' && r.value === 'Carousel'); assert.equal(car.posts, 1); assert.equal(car.avgWords, 4);
+  assert.equal(rows[0].value === 'Photo' || rows[0].avgReach === 300, true);
+  assert.deepEqual(A.olderWords(autos, posts, NOW, 5).map((x) => x.word), ['A']);
+});
