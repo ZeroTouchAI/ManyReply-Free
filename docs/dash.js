@@ -309,15 +309,16 @@
       });
     }
     function timeCard() {
-      return guard('when', 'clock', 'Best time to post', 'Average reach for each weekday and time of day, in your own time zone. Darker is better. Needs a few posts in each slot to mean much.', function () {
+      return guard('when', 'clock', 'Best time to post', 'Average reach for each weekday and time of day, in your own time zone. Green is best, red is lowest. Needs a few posts in each slot to mean much.', function () {
         var g = A.timeGrid(posts(), now());
         if (g.posts < 5) return empty('This fills in once you have 5 posts that are at least 3 days old.');
+        var vals = g.rows.reduce(function (a, r) { return a.concat(r.cells.filter(function (c) { return c.posts; }).map(function (c) { return c.avgReach; })); }, []), lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
         var head = ['Weekday'].concat(g.rows[0].cells.map(function (c) { return c.block; }));
         var tbl = el('div', { class: 'scroll' }, el('table', { class: 'heat' }, el('thead', null, el('tr', null, head.map(function (h) { return el('th', null, h); }))),
           el('tbody', null, g.rows.map(function (r) {
             return el('tr', null, el('th', null, r.day), r.cells.map(function (c) {
-              var pct = g.max > 0 && c.posts ? Math.round(12 + c.avgReach / g.max * 70) : 0;
-              return el('td', { class: c.posts ? 'hv' : 'no', title: c.posts ? c.posts + (c.posts === 1 ? ' post' : ' posts') : 'No posts', style: c.posts ? 'background:color-mix(in srgb,var(--accent) ' + pct + '%,transparent)' : '' }, c.posts ? f0(c.avgReach) : '–');
+              var hue = Math.round(Math.max(0, Math.min(1, hi > lo ? (c.avgReach - lo) / (hi - lo) : 1)) * 120); // red (lowest) through yellow to green (highest)
+              return el('td', { class: c.posts ? 'hv' : 'no', title: c.posts ? c.posts + (c.posts === 1 ? ' post' : ' posts') : 'No posts', style: c.posts ? 'background:hsl(' + hue + ' 75% 50% / .42)' : '' }, c.posts ? f0(c.avgReach) : '–');
             }));
           }))));
         return el('div', null, g.best ? el('p', { class: 'hint' }, 'Best slot so far: ', el('b', null, g.rows.filter(function (r) { return r.cells.indexOf(g.best) >= 0; })[0].day + ', ' + g.best.block), ' with ' + f0(g.best.avgReach) + ' average reach over ' + g.best.posts + (g.best.posts === 1 ? ' post.' : ' posts.')) : null, tbl);
