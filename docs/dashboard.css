@@ -239,3 +239,40 @@ html{scroll-behavior:smooth}
 .app .goalform{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-top:12px}
 .app .goalform label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:var(--muted)}
 .app .goalform input{font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 11px;min-height:40px}
+
+/* inbox and saved replies */
+.app .inbox{display:grid;grid-template-columns:minmax(220px,300px) 1fr;gap:16px;align-items:start}
+.app .ibleft,.app .ibright{min-width:0}
+.app .ibfilter{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.app .ibfilter .dashbtn.on{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.app .convos{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;max-height:460px;overflow:auto}
+.app .convo{all:unset;box-sizing:border-box;display:block;width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:12px;cursor:pointer;background:var(--surface)}
+.app .convo:hover{background:var(--raise)}
+.app .convo.on{border-color:var(--accent);background:var(--accent-soft)}
+.app .convo:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.app .convo .who{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.app .convo .who em{font-style:normal;font-size:12px;color:var(--muted)}
+.app .convo .last{display:block;color:var(--muted);font-size:13px;margin-top:2px;overflow-wrap:anywhere}
+.app .convo.unread .who b::after{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-left:8px}
+.app .ibtags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.app .ibtags i{font-style:normal;font-size:12px;padding:2px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent-strong)}
+.app .ibtags.edit{margin:8px 0}
+.app .ibtags i button{all:unset;cursor:pointer;margin-left:6px;font-weight:700}
+.app .ibtag,.app .ibnote,.app .ibcompose,.app .savedform input,.app .savedform textarea{font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.app .ibtag{width:110px;min-height:32px;box-sizing:border-box}
+.app .ibnote,.app .ibcompose,.app .savedform textarea{width:100%;box-sizing:border-box;resize:vertical}
+.app .ibmsgs{display:flex;flex-direction:column;gap:8px;max-height:340px;overflow:auto;padding:12px 4px;margin:8px 0}
+.app .ibmsg{max-width:82%;padding:9px 12px;border-radius:14px;background:var(--raise)}
+.app .ibmsg.out{align-self:flex-end;background:var(--accent);color:var(--on-accent)}
+.app .ibmsg.out a{color:inherit}
+.app .ibmsg p{margin:0;overflow-wrap:anywhere;white-space:pre-wrap}
+.app .ibmsg small{display:block;margin-top:4px;font-size:11px;opacity:.75}
+.app .ibform{display:flex;flex-direction:column;gap:8px}
+.app .ibrow{display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.app .savedlist{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-direction:column;gap:8px}
+.app .savedlist li{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:12px}
+.app .savedlist p{margin:4px 0 0;color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere}
+.app .savedform{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.app .savedform input{width:100%;max-width:320px;box-sizing:border-box}
+@media (max-width:760px){.app .inbox{grid-template-columns:1fr}.app .convos{max-height:240px}}
+.app .ibrow .select{max-width:240px}

@@ -51,8 +51,25 @@
   function params(path) { var o = {}; (path.split('?')[1] || '').split('&').forEach(function (kv) { var p = kv.split('='); if (p[0]) o[p[0]] = decodeURIComponent(p[1] || ''); }); return o; }
 
   window.MRDemoData = {
-    respond: function (method, path) {
+    respond: function (method, path, body) {
       var p = params(path);
+      if (path.indexOf('/inbox/conversations') === 0) {
+        var now = Date.now(), H = 3600000;
+        var people = [['Maya Chen', 'Hi! Is the GUIDE still free?', 0.4, 1], ['Daniel Okafor', 'Thanks, got the checklist 🙌', 3, 0], ['Priya Nair', 'Do you do one-off audits or only monthly?', 9, 2],
+                      ['Tom Reyes', 'Can I book a call this week?', 30, 1], ['Sofia Marino', 'Loved the carousel on planning a month of content', 80, 0], ['Jon Weber', 'What does the PRICE list include?', 200, 0]];
+        var m = path.match(/^\/inbox\/conversations\/([^/?]+)\/(messages|read)/);
+        if (m && m[2] === 'read') return { success: true };
+        if (m && method === 'POST') return { success: true, data: { messageId: 'demo-m' + Date.now(), conversationId: decodeURIComponent(m[1]) } };
+        if (m) {
+          var i = Number(String(decodeURIComponent(m[1])).replace('demo-c', '')) || 0, who = people[i] || people[0], t = now - who[2] * H;
+          var msgs = [{ id: 'm1', direction: 'incoming', message: 'GUIDE', createdAt: new Date(t - 2 * H).toISOString() },
+                      { id: 'm2', direction: 'outgoing', message: 'Hey! Here is the guide you asked for. Tap the button to open it.', createdAt: new Date(t - 2 * H + 20000).toISOString(), sentVia: 'comment_automation' },
+                      { id: 'm3', direction: 'incoming', message: who[1], createdAt: new Date(t).toISOString() }];
+          return { status: 'success', pagination: { hasMore: false, nextCursor: null }, sortOrderApplied: 'desc', messages: msgs.slice().reverse() };
+        }
+        return { data: people.map(function (x, n) { return { id: 'demo-c' + n, platform: 'instagram', accountId: p.accountId, participantId: 'u' + n, participantName: x[0], lastMessage: x[1], updatedTime: new Date(now - x[2] * H).toISOString(), status: 'active', unreadCount: x[3] }; }),
+                 pagination: { hasMore: false, nextCursor: null } };
+      }
       if (path.indexOf('/analytics/instagram/follower-history') === 0) {
         var s = followerSeries(new Date(p.fromDate + 'T00:00:00Z'), new Date(p.toDate + 'T00:00:00Z'));
         return { success: true, accountId: p.accountId, platform: 'instagram', metricType: 'time_series', metrics: { follower_count: { total: s.length ? s[s.length - 1].value : 0, values: s } } };

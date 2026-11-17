@@ -9,14 +9,14 @@
     send: 'M21 3L10 14M21 3l-7 18-4-8-8-4z', bookmark: 'M6 3h12v18l-6-4-6 4z', star: 'M12 3l2.7 5.6 6.3.9-4.5 4.4 1 6.1L12 17l-5.5 3 1-6.1L3 9.5l6.3-.9z',
     link: 'M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1', click: 'M9 9l11 4-5 2-2 5zM5 3v3M3 5h3',
     play: 'M7 4v16l13-8z', clock: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2', image: 'M4 5h16v14H4zM4 15l5-5 4 4 3-3 4 4',
-    moon: 'M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z', plus: 'M12 5v14M5 12h14', info: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v6M12 7h.01',
+    mail: 'M3 6h18v12H3zM3 7l9 7 9-7', moon: 'M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z', plus: 'M12 5v14M5 12h14', info: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v6M12 7h.01',
   };
   var LOGO = '<svg viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3B82F6"/><stop offset="1" stop-color="#A855F7"/></linearGradient></defs><rect x="19" y="1" width="10" height="6" rx="3" fill="url(#lg)"/><rect x="18" y="38" width="12" height="8" rx="2.5" fill="url(#lg)"/><rect x="2" y="15" width="5" height="13" rx="2.5" fill="url(#lg)"/><rect x="41" y="15" width="5" height="13" rx="2.5" fill="url(#lg)"/><rect x="7" y="7" width="34" height="32" rx="11" fill="#0B1229" stroke="url(#lg)" stroke-width="4"/><rect x="17" y="17" width="4" height="7" rx="2" fill="#7DD3FC"/><rect x="27" y="17" width="4" height="7" rx="2" fill="#7DD3FC"/><path d="M18 29c3.5 2.6 8.5 2.6 12 0" stroke="#7DD3FC" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg>';
   var IG = '<svg class="i ig" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.5"/><path d="M17 7h.01"/></svg>';
   function svgNode(s) { var t = document.createElement('template'); t.innerHTML = s; return t.content.firstChild; }
   function ico(name) { return svgNode('<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="' + ICONS[name] + '"/></svg>'); }
 
-  var NAV = [['top', 'home', 'Dashboard'], ['analytics', 'bars', 'Analytics'], ['words', 'chat', 'Comment Words'], ['top-posts', 'star', 'Top Posts'], ['worst', 'eye', 'Posts to Learn From'], ['perf', 'bars', 'Performance by Type'],
+  var NAV = [['top', 'home', 'Dashboard'], ['analytics', 'bars', 'Analytics'], ['words', 'chat', 'Comment Words'], ['inbox', 'mail', 'Inbox'], ['replies', 'file', 'Saved Replies'], ['top-posts', 'star', 'Top Posts'], ['worst', 'eye', 'Posts to Learn From'], ['perf', 'bars', 'Performance by Type'],
              ['when', 'clock', 'Best Time to Post'], ['captions', 'file', 'Caption Length'], ['tags', 'link', 'Hashtags'], ['rhythm', 'trend', 'Posting Rhythm'],
              ['growth', 'trend', 'Growth'], ['goal', 'star', 'Goal'], ['funnel', 'chat', 'Word Funnel'], ['links', 'link', 'Link Clicks'], ['unused', 'chat', 'Words Nobody Used'], ['posts', 'file', 'Posted'], ['working', 'star', 'What’s Working']];
 
@@ -406,8 +406,14 @@
       return card('unused', 'chat', 'Words nobody used', sub, null, !u.length ? empty('Every live word has been used at least once. Nice.') : el('div', { class: 'wordchips' }, u.map(function (x) { return el('span', { class: 'word' }, x.word); })));
     }
 
+    // ---- Inbox and Saved replies (inbox.js): messages come from Zernio, tags, notes and saved replies stay in this browser
+    function fill(sec, icon, title, sub, aside, body) {
+      sec.replaceChildren(el('div', { class: 'head' }, ico(icon), el('div', null, el('h2', null, title), el('p', null, sub)), aside && el('div', { class: 'aside' }, aside)), body);
+    }
+    var inbox = window.MRInbox.mount({ el: el, acct: acct, call: call, toast: ctx.toast, safeUrl: safeUrl, clip: ctx.clip, fill: fill });
+
     var grid = el('div', { class: 'grid' });
-    function paint() { stripe.replaceChildren(facts()); grid.replaceChildren(analyticsCard(), wordsCard(), topCard(), worstCard(), perfCard(), timeCard(), captionCard(), tagsCard(), rhythmCard(), growthCard(), goalCard(),
+    function paint() { stripe.replaceChildren(facts()); grid.replaceChildren(analyticsCard(), wordsCard(), inbox.inboxCard(), inbox.repliesCard(), topCard(), worstCard(), perfCard(), timeCard(), captionCard(), tagsCard(), rhythmCard(), growthCard(), goalCard(),
         funnelCard(), linksCard(), unusedCard(), postedCard(), workingCard()); }
     async function refresh() {
       d.loading = true; stripe.replaceChildren(facts());
@@ -422,6 +428,7 @@
     ctx.mountApp(frame(ctx, [stripe, grid], true));
     paint();
     refresh();
+    inbox.load();
   }
 
   window.MRDash = { home: home, frame: frame };

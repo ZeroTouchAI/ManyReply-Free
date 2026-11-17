@@ -71,9 +71,9 @@
   MR.createClient = function (key) {
     if (key !== MARK) return real.apply(MR, arguments);
     return {
-      call: function (method, path) {
+      call: function (method, path, body) {
         var D = window.MRDemoData;
-        return wait(D ? D.respond(method, path) : {});
+        return wait(D ? D.respond(method, path, body) : {});
       },
       accounts: function () { return wait([clone(account)]); },
       posts: function () { return wait(clone(posts)); },
