@@ -276,3 +276,14 @@ html{scroll-behavior:smooth}
 .app .savedform input{width:100%;max-width:320px;box-sizing:border-box}
 @media (max-width:760px){.app .inbox{grid-template-columns:1fr}.app .convos{max-height:240px}}
 .app .ibrow .select{max-width:240px}
+
+/* help */
+.app dialog.helpdlg{width:min(720px,calc(100vw - 32px));max-height:min(86vh,900px);padding:0;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--fg);overflow:auto;box-shadow:0 24px 70px rgba(10,15,40,.35)}
+.app dialog.helpdlg::backdrop{background:rgba(10,15,40,.55)}
+.app .helphead{position:sticky;top:0;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 22px;background:var(--surface);border-bottom:1px solid var(--line)}
+.app .helphead h2{margin:0;font:800 20px/1.2 var(--display)}
+.app .helpintro{margin:16px 22px 0;color:var(--muted)}
+.app dialog.helpdlg section{padding:6px 22px 14px}
+.app dialog.helpdlg h3{margin:18px 0 8px;font:800 13px/1.2 var(--display);text-transform:uppercase;letter-spacing:.06em;color:var(--accent-strong)}
+.app dialog.helpdlg dt{font-weight:700;margin-top:10px}
+.app dialog.helpdlg dd{margin:2px 0 0;color:var(--muted);overflow-wrap:anywhere}

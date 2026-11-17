@@ -9,7 +9,7 @@
     send: 'M21 3L10 14M21 3l-7 18-4-8-8-4z', bookmark: 'M6 3h12v18l-6-4-6 4z', star: 'M12 3l2.7 5.6 6.3.9-4.5 4.4 1 6.1L12 17l-5.5 3 1-6.1L3 9.5l6.3-.9z',
     link: 'M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1', click: 'M9 9l11 4-5 2-2 5zM5 3v3M3 5h3',
     play: 'M7 4v16l13-8z', clock: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2', image: 'M4 5h16v14H4zM4 15l5-5 4 4 3-3 4 4',
-    mail: 'M3 6h18v12H3zM3 7l9 7 9-7', moon: 'M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z', plus: 'M12 5v14M5 12h14', info: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v6M12 7h.01',
+    mail: 'M3 6h18v12H3zM3 7l9 7 9-7', help: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM9.5 9.5a2.5 2.5 0 1 1 3.6 2.2c-.7.4-1.1.9-1.1 1.6M12 17h.01', moon: 'M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z', plus: 'M12 5v14M5 12h14', info: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v6M12 7h.01',
   };
   var LOGO = '<svg viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3B82F6"/><stop offset="1" stop-color="#A855F7"/></linearGradient></defs><rect x="19" y="1" width="10" height="6" rx="3" fill="url(#lg)"/><rect x="18" y="38" width="12" height="8" rx="2.5" fill="url(#lg)"/><rect x="2" y="15" width="5" height="13" rx="2.5" fill="url(#lg)"/><rect x="41" y="15" width="5" height="13" rx="2.5" fill="url(#lg)"/><rect x="7" y="7" width="34" height="32" rx="11" fill="#0B1229" stroke="url(#lg)" stroke-width="4"/><rect x="17" y="17" width="4" height="7" rx="2" fill="#7DD3FC"/><rect x="27" y="17" width="4" height="7" rx="2" fill="#7DD3FC"/><path d="M18 29c3.5 2.6 8.5 2.6 12 0" stroke="#7DD3FC" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg>';
   var IG = '<svg class="i ig" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.5"/><path d="M17 7h.01"/></svg>';
@@ -21,6 +21,55 @@
              ['growth', 'trend', 'Growth'], ['goal', 'star', 'Goal'], ['funnel', 'chat', 'Word Funnel'], ['links', 'link', 'Link Clicks'], ['unused', 'chat', 'Words Nobody Used'], ['posts', 'file', 'Posted'], ['working', 'star', 'What’s Working']];
 
   // ------------------------------------------------------------------ the frame: sidebar (brand, sections, your account) + main
+  // ------------------------------------------------------------------ Help: what every part does, in plain words
+  var HELP = [
+    ['Getting around', [
+      ['The top strip', 'Shows your @account, followers and reach, and when the numbers were last updated. The theme button switches between Auto, Light and Dark.'],
+      ['The left menu', 'Jump to any section. Your account and the Disconnect button are at the bottom. If you have more than one Instagram account, switch between them there.'],
+      ['New word', 'Sets up a comment-to-DM automation: choose a post (or any post), the word people comment, the DM they get and the link inside it. You can also ask people to follow you first.'],
+      ['Try the demo', 'On the sign-in page. It fills the dashboard with sample data so you can look around without connecting anything.']]],
+    ['Your results', [
+      ['Analytics', 'The headline numbers for the period you pick, from 24 hours to 1 year. The arrow and percentage compare it with the period before. The 1 year view has nothing to compare with.'],
+      ['Comment words', 'Every word you have set up, with how many comments it got, DMs it sent and link clicks. Pause, edit or delete a word here. A post can have one live word.'],
+      ['Top posts', 'Your best posts of the last 60 days, ranked by reach, with saves, sends and follows next to each. “x usual” compares its reach with your normal post (2x means twice as many people).'],
+      ['Posts to learn from', 'Your five lowest-reach posts of the last 60 days, and how they compare with your usual post. Look for what they have in common and do less of it.'],
+      ['Performance by type', 'Photos, carousels and reels side by side, so you can see which format works best for you.'],
+      ['Growth', 'Followers over time. Click a day to see the posts around it, or pick two dates to see what you posted and how many followers you gained between them. Follower history goes back 89 days.'],
+      ['Posted', 'All your posts, newest first. Each one has a row of reactions: reached (people who saw it), views, likes, comments, saves, sends (shared by DM), follows (new followers from the post), word comments (comments that used your word) and link clicks (taps on the link in your DM). Open a post for the full detail.'],
+      ['What’s working', 'Your posts grouped by type, weekday, posting time and comment word, best first, with average reach, word comments and follows for each group.']]],
+    ['Patterns in your posting', [
+      ['Best time to post', 'A grid of weekdays and times of day. Green is your best average reach, red is your lowest. The number in each square is the average reach, and an empty square means no posts then.'],
+      ['Caption length', 'Short, medium and long captions against average reach, saves and sends.'],
+      ['Hashtags', 'Hashtags you have used on at least two posts, ranked by average reach. “x usual” is how that compares with your normal post.'],
+      ['Posting rhythm', 'Compares weeks with different numbers of posts, so you can see whether posting more brings more reach.']]],
+    ['Your comment words in depth', [
+      ['Word funnel', 'For each word: comments, then DMs sent, then link clicks, with the percentage that made it to the next step. It shows which words turn comments into clicks.'],
+      ['Link clicks', 'Clicks for each link you send, added up across every word that sends it.'],
+      ['Words nobody used', 'Live words on posts more than a week old that have had no comments. Rewrite the call to action, pause them or delete them.']]],
+    ['Messages and goals', [
+      ['Inbox', 'Read and answer your Instagram DMs. Open a conversation to see it, write a reply and press Send. If the person last wrote over 24 hours ago, Instagram only allows a reply sent as a “human agent” message, and the dashboard sends it that way (up to 7 days).'],
+      ['Tags and notes', 'In a conversation you can tag the person (for example hot-lead) and keep a private note. Use the tag buttons above the list to filter your inbox.'],
+      ['Saved replies', 'Write messages you send often once, then insert them into a reply from the drop-down in the inbox.'],
+      ['Goal', 'Set a follower target and a date. The bar shows how far along you are, how many followers a week you need, and how many you have been gaining.']]],
+    ['Good to know', [
+      ['Where the numbers come from', 'Everything is read from your own Zernio account when you open the page. Press Update now to fetch it again.'],
+      ['What is saved where', 'Tags, notes, saved replies and your goal are saved in this browser only. They do not follow you to another device and are lost if you clear the browser’s data.'],
+      ['Zernio add-ons', 'Analytics and the inbox are Zernio add-ons. If one is not switched on for your account, that section says so and the rest keeps working.'],
+      ['Comment-word numbers', 'Zernio keeps running totals for each word, so a word’s numbers are counted in the period its post was published.'],
+      ['Posts made outside Zernio', 'If posts are missing, turn on Zernio’s external-post sync and press Update now.']]]];
+
+  function helpDialog(ctx) {
+    var el = ctx.el, dlg = el('dialog', { class: 'helpdlg', 'aria-labelledby': 'helptitle' });
+    var close = function () { dlg.close(); };
+    dlg.append(el('div', { class: 'helphead' }, el('h2', { id: 'helptitle' }, 'Help'), el('button', { class: 'dashbtn', type: 'button', onclick: close, 'aria-label': 'Close help' }, 'Close')),
+      el('p', { class: 'helpintro' }, 'ManyReply DM turns Instagram comments into DMs and shows how your posts perform. Here is what each part does.'),
+      el('div', null, HELP.map(function (g) {
+        return el('section', null, el('h3', null, g[0]), el('dl', null, g[1].map(function (r) { return [el('dt', null, r[0]), el('dd', null, r[1])]; })));
+      })));
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); }); // a click on the dimmed area closes it
+    return dlg;
+  }
+
   function frame(ctx, content, onHome) {
     var el = ctx.el, S = ctx.S, acct = S.account;
     var go = function (id) {
@@ -30,15 +79,16 @@
     var picker = S.accounts.length > 1 && el('select', { class: 'select', 'aria-label': 'Instagram account', onchange: function (e) {
       S.account = S.accounts.find(function (a) { return a._id === e.target.value; }); ctx.keep.account(S.account._id); S.automations = null; S.posts = null; ctx.go('#/');
     } }, S.accounts.map(function (a) { return el('option', { value: a._id, selected: a._id === acct._id }, '@' + a.username); }));
+    var help = helpDialog(ctx);
     var side = el('aside', { class: 'side' },
       el('a', { class: 'brand', href: '#/' }, svgNode(LOGO), el('span', null, 'Many', el('b', null, 'Reply')), el('small', null, 'DM')),
       el('nav', { 'aria-label': 'Sections' }, NAV.map(function (n, i) {
         return el('a', { href: '#/', class: i === 0 ? 'on' : null, onclick: function (e) { e.preventDefault(); go(n[0]); } }, ico(n[1]), n[2]);
-      }), el('a', { href: '#/new' }, ico('plus'), 'New word')),
+      }), el('a', { href: '#/new' }, ico('plus'), 'New word'), el('a', { href: '#/', class: 'helplink', onclick: function (e) { e.preventDefault(); help.showModal(); } }, ico('help'), 'Help')),
       el('div', { class: 'promo' },
         el('div', { class: 'who2' }, svgNode(IG), el('div', { style: 'min-width:0' }, el('b', null, '@' + acct.username), el('span', null, 'Connected on Instagram'))),
         picker, el('button', { class: 'dashbtn', type: 'button', onclick: ctx.signOut }, 'Disconnect')));
-    return el('div', { class: 'app' }, side, el('div', { class: 'main', id: 'top' }, content));
+    return el('div', { class: 'app' }, side, el('div', { class: 'main', id: 'top' }, content), help);
   }
 
   // ------------------------------------------------------------------ the dashboard
