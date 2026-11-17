@@ -1,5 +1,4 @@
-/* The dashboard, built from the original ManyReply design: sidebar, facts strip, then Analytics, Comment words, Performance by type,
- * Top posts, Growth, Posted, What's working. app.js hands over what it owns; numbers come from analytics.js. */
+/* The dashboard, built from the original ManyReply design: sidebar, facts strip, then Analytics, Comment words, Top posts and the rest (see paint()). app.js hands over what it owns; numbers come from analytics.js. */
 (function () {
   'use strict';
   var A = window.MRA;
@@ -17,8 +16,9 @@
   function svgNode(s) { var t = document.createElement('template'); t.innerHTML = s; return t.content.firstChild; }
   function ico(name) { return svgNode('<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="' + ICONS[name] + '"/></svg>'); }
 
-  var NAV = [['top', 'home', 'Dashboard'], ['analytics', 'bars', 'Analytics'], ['words', 'chat', 'Comment Words'], ['top-posts', 'star', 'Top Posts'], ['perf', 'bars', 'Performance by Type'],
-             ['growth', 'trend', 'Growth'], ['posts', 'file', 'Posted'], ['working', 'star', 'What’s Working']];
+  var NAV = [['top', 'home', 'Dashboard'], ['analytics', 'bars', 'Analytics'], ['words', 'chat', 'Comment Words'], ['top-posts', 'star', 'Top Posts'], ['worst', 'eye', 'Posts to Learn From'], ['perf', 'bars', 'Performance by Type'],
+             ['when', 'clock', 'Best Time to Post'], ['captions', 'file', 'Caption Length'], ['tags', 'link', 'Hashtags'], ['rhythm', 'trend', 'Posting Rhythm'],
+             ['growth', 'trend', 'Growth'], ['goal', 'star', 'Goal'], ['funnel', 'chat', 'Word Funnel'], ['links', 'link', 'Link Clicks'], ['unused', 'chat', 'Words Nobody Used'], ['posts', 'file', 'Posted'], ['working', 'star', 'What’s Working']];
 
   // ------------------------------------------------------------------ the frame: sidebar (brand, sections, your account) + main
   function frame(ctx, content, onHome) {
@@ -291,8 +291,123 @@
       return card('words', 'chat', 'Comment words', 'Pause, edit or delete a word. A post can have one live word.', el('a', { class: 'dashbtn primary', href: '#/new' }, 'New word'), body);
     }
 
+    // ---- Worst posts, Best time to post, Caption length, Hashtags, Posting rhythm (all worked out from the posts above)
+    function guard(id, icon, title, sub, make) {
+      if (d.loading && !d.data) return card(id, icon, title, sub, null, el('div', { class: 'skeleton' }));
+      if (d.data.postsError) return card(id, icon, title, sub, null, notice(d.data.postsError, title.toLowerCase()));
+      return card(id, icon, title, sub, null, make());
+    }
+    var empty = function (t) { return el('div', { class: 'empty' }, t); };
+    function worstCard() {
+      return guard('worst', 'eye', 'Posts to learn from', 'Your 5 lowest-reach posts of the last 60 days (at least 3 days old). Look for what they share and do less of it.', function () {
+        var w = A.worstPosts(posts(), now(), 60, 5);
+        return !w.length ? empty('This needs at least 4 posts from the last 60 days.') : table('rank', [['Date'], ['Type'], ['Post'], ['Reach', 1], ['x usual', 1]], w.map(function (x) {
+          var u = safeUrl(x.post.url), txt = ctx.clip(x.post.text || tname[x.post.type], 70), x0 = new Date(x.post.t);
+          return el('tr', null, el('td', { style: 'font-family:var(--mono);white-space:nowrap' }, two(x0.getMonth() + 1) + '-' + two(x0.getDate())), el('td', null, tname[x.post.type]),
+            el('td', null, u ? el('a', { href: u, target: '_blank', rel: 'noopener' }, txt) : txt), el('td', { class: 'n' }, f0(x.post.reach)), el('td', { class: 'n' }, x.x.toFixed(1) + 'x'));
+        }));
+      });
+    }
+    function timeCard() {
+      return guard('when', 'clock', 'Best time to post', 'Average reach for each weekday and time of day, in your own time zone. Darker is better. Needs a few posts in each slot to mean much.', function () {
+        var g = A.timeGrid(posts(), now());
+        if (g.posts < 5) return empty('This fills in once you have 5 posts that are at least 3 days old.');
+        var head = ['Weekday'].concat(g.rows[0].cells.map(function (c) { return c.block; }));
+        var tbl = el('div', { class: 'scroll' }, el('table', { class: 'heat' }, el('thead', null, el('tr', null, head.map(function (h) { return el('th', null, h); }))),
+          el('tbody', null, g.rows.map(function (r) {
+            return el('tr', null, el('th', null, r.day), r.cells.map(function (c) {
+              var pct = g.max > 0 && c.posts ? Math.round(12 + c.avgReach / g.max * 70) : 0;
+              return el('td', { class: c.posts ? 'hv' : 'no', title: c.posts ? c.posts + (c.posts === 1 ? ' post' : ' posts') : 'No posts', style: c.posts ? 'background:color-mix(in srgb,var(--accent) ' + pct + '%,transparent)' : '' }, c.posts ? f0(c.avgReach) : '–');
+            }));
+          }))));
+        return el('div', null, g.best ? el('p', { class: 'hint' }, 'Best slot so far: ', el('b', null, g.rows.filter(function (r) { return r.cells.indexOf(g.best) >= 0; })[0].day + ', ' + g.best.block), ' with ' + f0(g.best.avgReach) + ' average reach over ' + g.best.posts + (g.best.posts === 1 ? ' post.' : ' posts.')) : null, tbl);
+      });
+    }
+    function captionCard() {
+      return guard('captions', 'file', 'Caption length', 'Short, medium and long captions against average reach, saves and sends.', function () {
+        var c = A.captionLength(posts(), now());
+        return c.every(function (x) { return !x.posts; }) ? empty('This fills in once you have posts that are at least 3 days old.') :
+          table('rank', [['Caption'], ['Posts', 1], ['Avg reach', 1], ['Avg saves', 1], ['Avg sends', 1]], c.map(function (x) {
+            return el('tr', null, el('td', null, x.label), el('td', { class: 'n' }, f0(x.posts)), [x.avgReach, x.avgSaves, x.avgShares].map(function (v) { return el('td', { class: 'n' }, x.posts ? f1(v) : '–'); }));
+          }));
+      });
+    }
+    function tagsCard() {
+      return guard('tags', 'link', 'Hashtags', 'Hashtags you used on at least 2 posts, best average reach first. The x column is against your usual post.', function () {
+        var h = A.hashtags(posts(), now(), 10);
+        return !h.length ? empty('No hashtag has been used on 2 or more posts yet.') : table('rank', [['Hashtag'], ['Posts', 1], ['Avg reach', 1], ['x usual', 1]], h.map(function (x) {
+          return el('tr', null, el('td', null, x.tag), el('td', { class: 'n' }, f0(x.posts)), el('td', { class: 'n' }, f1(x.avgReach)), el('td', { class: 'n' }, x.x.toFixed(1) + 'x'));
+        }));
+      });
+    }
+    function rhythmCard() {
+      return guard('rhythm', 'trend', 'Posting rhythm', 'The last 12 weeks, grouped by how many posts went out that week, against the reach the week brought in.', function () {
+        var r = A.rhythm(posts(), now(), 12);
+        return el('div', null, el('p', { class: 'hint' }, 'You averaged ', el('b', null, f1(r.perWeek)), ' posts a week.'),
+          table('rank', [['Posts in the week'], ['Weeks', 1], ['Avg reach for the week', 1]], r.buckets.filter(function (b) { return b.weeks; }).map(function (b) {
+            return el('tr', null, el('td', null, b.label), el('td', { class: 'n' }, f0(b.weeks)), el('td', { class: 'n' }, f1(b.avgReach)));
+          })));
+      });
+    }
+
+    // ---- Goal: a follower target, kept in this browser only
+    var goalKey = 'mrdm.goal.' + (acct._id || acct.username);
+    function loadGoal() { try { var g = JSON.parse(localStorage.getItem(goalKey) || 'null'); return g && g.target > 0 && /^\d{4}-\d\d-\d\d$/.test(g.by) ? g : null; } catch (e) { return null; } }
+    function saveGoal(g) { try { if (g) localStorage.setItem(goalKey, JSON.stringify(g)); else localStorage.removeItem(goalKey); } catch (e) { ctx.toast('This browser would not save the goal.'); } }
+    function goalCard() {
+      var sub = 'Set a follower target and a date. It is saved in this browser only.';
+      var goal = loadGoal(), series = d.data && d.data.followers;
+      var tIn = el('input', { type: 'number', min: 1, inputmode: 'numeric', 'aria-label': 'Follower target', placeholder: 'Followers', value: goal ? goal.target : '' });
+      var bIn = el('input', { type: 'date', 'aria-label': 'Reach it by', value: goal ? goal.by : '' });
+      var form = el('div', { class: 'goalform' }, el('label', null, 'Target', tIn), el('label', null, 'By', bIn),
+        el('button', { class: 'dashbtn primary', type: 'button', onclick: function () {
+          var t = Math.round(Number(tIn.value)), last = series && series.length ? series[series.length - 1].value : 0;
+          if (!(t > 0) || !bIn.value) { ctx.toast('Add a target and a date.'); return; }
+          saveGoal({ target: t, by: bIn.value, start: last }); paint();
+        } }, goal ? 'Update goal' : 'Set goal'), goal ? el('button', { class: 'dashbtn', type: 'button', onclick: function () { saveGoal(null); paint(); } }, 'Clear') : null);
+      var body;
+      if (d.loading && !d.data) return card('goal', 'star', 'Goal', sub, null, el('div', { class: 'skeleton' }));
+      var gp = goal && A.goalProgress(series || [], goal, now());
+      if (!gp) body = el('div', null, empty(series && series.length ? 'No goal yet. Pick a number you can reach and a date.' : 'Follower history has not loaded yet, so there is nothing to measure a goal against.'), form);
+      else {
+        var msg = gp.done ? 'Goal reached. Set a new one when you are ready.' : gp.weeksLeft === 0 ? 'The date has passed. Update the goal to keep going.' :
+          gp.need == null ? '' : 'You need about ' + f1(gp.need) + ' new followers a week. Over the last 30 days you gained ' + (gp.pace == null ? 'an unknown number' : f1(gp.pace)) + ' a week' + (gp.onTrack == null ? '.' : gp.onTrack ? ', so you are on track.' : ', so you are behind.');
+        body = el('div', null, el('p', { class: 'hint' }, el('b', null, f0(gp.cur)), ' of ' + f0(gp.target) + ' followers by ' + nice(goal.by) + ' (' + Math.round(gp.pct) + '%)'),
+          el('div', { class: 'meter', role: 'img', 'aria-label': Math.round(gp.pct) + ' percent of the way' }, el('i', { style: 'width:' + Math.round(gp.pct) + '%' })), el('p', { class: 'hint' }, msg), form);
+      }
+      return card('goal', 'star', 'Goal', sub, null, body);
+    }
+
+    // ---- Word funnel, Link clicks, Words nobody used
+    function funnelCard() {
+      var sub = 'For each word: comments, then DMs sent, then link clicks. The percentages show how many make it to the next step.';
+      if (!d.autos) return card('funnel', 'chat', 'Word funnel', sub, null, el('div', { class: 'skeleton' }));
+      var f = A.wordFunnel(d.autos), pc = function (v) { return v == null ? '–' : Math.round(v * 100) + '%'; };
+      return card('funnel', 'chat', 'Word funnel', sub, null, !f.length ? empty('Nothing to show until a word has had its first comment.') :
+        table('rank', [['Word'], ['Comments', 1], ['DMs sent', 1], ['Got a DM', 1], ['Link clicks', 1], ['Clicked', 1]], f.map(function (x) {
+          return el('tr', null, el('td', null, el('span', { class: 'word' }, x.word)), [f0(x.comments), f0(x.dms), pc(x.dmRate), f0(x.clicks), pc(x.clickRate)].map(function (v) { return el('td', { class: 'n' }, v); }));
+        })));
+    }
+    function linksCard() {
+      var sub = 'Clicks for each link you send, added up across every word that sends it.';
+      if (!d.autos) return card('links', 'link', 'Link clicks', sub, null, el('div', { class: 'skeleton' }));
+      var l = A.linkClicks(d.autos);
+      return card('links', 'link', 'Link clicks', sub, null, !l.length ? empty('No word sends a link yet.') : table('rank', [['Link'], ['Words', 1], ['DMs sent', 1], ['Clicks', 1], ['Clicked', 1]], l.map(function (x) {
+        var u = safeUrl(x.url);
+        return el('tr', null, el('td', null, u ? el('a', { href: u, target: '_blank', rel: 'noopener' }, ctx.clip(u.replace(/^https:\/\//, ''), 50)) : ctx.clip(x.url, 50)),
+          [f0(x.words), f0(x.dms), f0(x.clicks), x.rate == null ? '–' : Math.round(x.rate * 100) + '%'].map(function (v) { return el('td', { class: 'n' }, v); }));
+      })));
+    }
+    function unusedCard() {
+      var sub = 'Live words on posts that are over a week old and have had no comments. Rewrite the call to action, pause them or delete them.';
+      if (!d.autos) return card('unused', 'chat', 'Words nobody used', sub, null, el('div', { class: 'skeleton' }));
+      var u = A.unusedWords(d.autos, posts(), now());
+      return card('unused', 'chat', 'Words nobody used', sub, null, !u.length ? empty('Every live word has been used at least once. Nice.') : el('div', { class: 'wordchips' }, u.map(function (x) { return el('span', { class: 'word' }, x.word); })));
+    }
+
     var grid = el('div', { class: 'grid' });
-    function paint() { stripe.replaceChildren(facts()); grid.replaceChildren(analyticsCard(), wordsCard(), topCard(), perfCard(), growthCard(), postedCard(), workingCard()); }
+    function paint() { stripe.replaceChildren(facts()); grid.replaceChildren(analyticsCard(), wordsCard(), topCard(), worstCard(), perfCard(), timeCard(), captionCard(), tagsCard(), rhythmCard(), growthCard(), goalCard(),
+        funnelCard(), linksCard(), unusedCard(), postedCard(), workingCard()); }
     async function refresh() {
       d.loading = true; stripe.replaceChildren(facts());
       var res = await Promise.all([A.load(call, acct), ctx.loadAutomations(true).catch(function (e) { return e; }), ctx.loadPosts()]);

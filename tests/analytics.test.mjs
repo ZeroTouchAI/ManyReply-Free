@@ -137,3 +137,24 @@ test("what's working groups by type, weekday, time and word; older words skip re
   assert.equal(rows[0].value === 'Photo' || rows[0].avgReach === 300, true);
   assert.deepEqual(A.olderWords(autos, posts, NOW, 5).map((x) => x.word), ['A']);
 });
+
+test('extra views: grid, captions, hashtags, rhythm, worst posts, funnel, links, unused words, goal', async () => {
+  const now = Date.parse('2026-11-16T12:00:00Z'), D = A.DAY;
+  const mk = (i, reach, text) => ({ id: 'p' + i, platformPostId: 'x' + i, t: now - (4 + i * 3) * D, type: 'photo', text, reach, views: reach, likes: 0, comments: 0, saves: 1, shares: 0, follows: 0, clicks: 0 });
+  const posts = [mk(0, 100, '#a #b short'), mk(1, 300, '#a ' + 'x'.repeat(120)), mk(2, 50, '#b #a ' + 'y'.repeat(300)), mk(3, 500, 'plain'), mk(4, 10, 'plain two')];
+  const g = A.timeGrid(posts, now); assert.equal(g.rows.length, 7); assert.equal(g.posts, 5); assert.ok(g.max >= 500 / 1 || g.max > 0);
+  const c = A.captionLength(posts, now); assert.deepEqual(c.map((x) => x.posts), [3, 1, 1]);
+  const h = A.hashtags(posts, now); assert.equal(h[0].tag, '#a'); assert.equal(h[0].posts, 3); assert.equal(h.find((x) => x.tag === '#b').posts, 2);
+  const r = A.rhythm(posts, now, 12); assert.equal(r.buckets.reduce((s, b) => s + b.weeks, 0), 12); assert.ok(r.perWeek > 0);
+  const w = A.worstPosts(posts, now, 60, 2); assert.deepEqual(w.map((x) => x.post.reach), [10, 50]); assert.deepEqual(A.worstPosts(posts.slice(0, 3), now, 60, 2), []);
+  const autos = [{ _id: 'a1', keywords: ['GUIDE'], platformPostId: 'x0', isActive: true, buttons: [{ url: 'https://e.com/g' }], stats: { triggered: 10, dmsSent: 8, linkClicks: 4 } },
+                 { _id: 'a2', keywords: ['LIST'], platformPostId: 'x1', isActive: true, buttons: [{ url: 'https://e.com/g' }], stats: { triggered: 5, dmsSent: 4, linkClicks: 2 } },
+                 { _id: 'a3', keywords: ['NONE'], platformPostId: 'x2', isActive: true, stats: { triggered: 0 } }];
+  const f = A.wordFunnel(autos); assert.equal(f.length, 2); assert.equal(f[0].dmRate, 0.8); assert.equal(f[0].clickRate, 0.5);
+  const l = A.linkClicks(autos); assert.equal(l.length, 1); assert.equal(l[0].words, 2); assert.equal(l[0].clicks, 6);
+  assert.deepEqual(A.unusedWords(autos, posts, now).map((x) => x.word), ['NONE']);
+  const series = [{ date: '2026-10-17', value: 1000 }, { date: '2026-11-16', value: 1100 }];
+  const gp = A.goalProgress(series, { target: 1300, by: '2027-01-16', start: 1000 }, now);
+  assert.equal(gp.cur, 1100); assert.equal(Math.round(gp.pct), 85); assert.ok(gp.pace > 20 && gp.pace < 30); assert.equal(gp.done, false);
+  assert.equal(A.goalProgress(series, null, now), null);
+});

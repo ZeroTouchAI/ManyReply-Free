@@ -265,7 +265,95 @@
     }).sort((a, b) => b.clicks - a.clicks || b.dms - a.dms || b.comments - a.comments);
   }
 
+  // ---------------------------------------------------------------- extra views, all worked out from the same posts and words (no extra services)
+
+  const settled = (posts, now) => posts.filter((p) => p.t <= now - 3 * DAY);
+  const avg = (ps, f) => (ps.length ? ps.reduce((s, p) => s + f(p), 0) / ps.length : 0);
+
+  /** Average reach for each weekday and time-of-day block, for a heat grid. */
+  function timeGrid(posts, now) {
+    const ps = settled(posts, now), order = [1, 2, 3, 4, 5, 6, 0];
+    const cells = new Map();
+    for (const p of ps) { const d = new Date(p.t); const k = d.getDay() + '|' + block(d.getHours()); const e = cells.get(k) || []; e.push(p); cells.set(k, e); }
+    const rows = order.map((dow) => ({ day: DAYS[dow], cells: [...BLOCKS.map((b) => b[2]), 'Night (11–5)'].map((b) => { const e = cells.get(dow + '|' + b) || []; return { block: b, posts: e.length, avgReach: avg(e, (p) => p.reach) }; }) }));
+    const all = rows.flatMap((r) => r.cells).filter((c) => c.posts);
+    return { rows, max: all.reduce((m, c) => Math.max(m, c.avgReach), 0), best: all.slice().sort((a, b) => b.avgReach - a.avgReach)[0] || null, posts: ps.length };
+  }
+
+  /** Short, medium and long captions against average reach, saves and sends. */
+  function captionLength(posts, now) {
+    const ps = settled(posts, now);
+    return [['Short (under 80 characters)', 0, 80], ['Medium (80 to 250)', 80, 250], ['Long (250 or more)', 250, Infinity]].map(([label, lo, hi]) => {
+      const e = ps.filter((p) => p.text.length >= lo && p.text.length < hi);
+      return { label, posts: e.length, avgReach: avg(e, (p) => p.reach), avgSaves: avg(e, (p) => p.saves), avgShares: avg(e, (p) => p.shares) };
+    });
+  }
+
+  /** Hashtags used on at least two posts, best average reach first. */
+  function hashtags(posts, now, n) {
+    const ps = settled(posts, now), m = new Map();
+    for (const p of ps) for (const t of new Set((p.text.match(/#[\p{L}\p{N}_]+/gu) || []).map((x) => x.toLowerCase()))) { const e = m.get(t) || []; e.push(p); m.set(t, e); }
+    const base = avg(ps, (p) => p.reach);
+    return [...m.entries()].filter(([, e]) => e.length >= 2).map(([tag, e]) => ({ tag, posts: e.length, avgReach: avg(e, (p) => p.reach), x: base > 0 ? avg(e, (p) => p.reach) / base : 0 }))
+      .sort((a, b) => b.avgReach - a.avgReach).slice(0, n || 10);
+  }
+
+  /** Weeks grouped by how many posts went out, against the reach those weeks brought in. */
+  function rhythm(posts, now, weeks) {
+    const W = 7 * DAY, n = weeks || 12, byWeek = [];
+    for (let i = 0; i < n; i++) { const ps = posts.filter((p) => p.t > now - (i + 1) * W && p.t <= now - i * W); byWeek.push({ posts: ps.length, reach: ps.reduce((s, p) => s + p.reach, 0) }); }
+    const buckets = [['No posts', 0, 0], ['1 post', 1, 1], ['2 to 3 posts', 2, 3], ['4 or more', 4, Infinity]].map(([label, lo, hi]) => {
+      const e = byWeek.filter((w) => w.posts >= lo && w.posts <= hi);
+      return { label, weeks: e.length, avgReach: e.length ? e.reduce((s, w) => s + w.reach, 0) / e.length : 0 };
+    });
+    return { buckets, weeks: n, perWeek: byWeek.reduce((s, w) => s + w.posts, 0) / n };
+  }
+
+  /** The posts that reached the fewest people, last `days` days, settled posts only. */
+  function worstPosts(posts, now, days, n) {
+    const ps = settled(posts, now).filter((p) => p.t > now - (days || 60) * DAY);
+    if (ps.length < 4) return [];
+    const a = avg(ps, (p) => p.reach);
+    return ps.slice().sort((x, y) => x.reach - y.reach).slice(0, n || 5).map((p) => ({ post: p, x: a > 0 ? p.reach / a : 0 }));
+  }
+
+  /** Each word as a funnel: comments, then DMs sent, then link clicks, with the share that makes it to each step. */
+  function wordFunnel(autos) {
+    return wordsWorking(autos).filter((w) => w.comments || w.dms || w.clicks).map((w) => ({ ...w, dmRate: w.comments > 0 ? w.dms / w.comments : null, clickRate: w.dms > 0 ? w.clicks / w.dms : null }))
+      .sort((a, b) => b.dms - a.dms || b.comments - a.comments);
+  }
+
+  /** Link clicks added up per link, across every word that sends it. */
+  function linkClicks(autos) {
+    const m = new Map();
+    for (const a of autos || []) {
+      const b = (a.buttons || []).find((x) => x && x.url); if (!b) continue;
+      const s = st(a), e = m.get(b.url) || { url: b.url, words: 0, dms: 0, clicks: 0 }; e.words++; e.dms += s.dms; e.clicks += s.clicks; m.set(b.url, e);
+    }
+    return [...m.values()].map((e) => ({ ...e, rate: e.dms > 0 ? e.clicks / e.dms : null })).sort((a, b) => b.clicks - a.clicks || b.dms - a.dms);
+  }
+
+  /** Live words whose post is at least a week old and that nobody has commented. */
+  function unusedWords(autos, posts, now) {
+    const old = new Set(posts.filter((p) => p.t <= now - 7 * DAY && p.platformPostId).map((p) => p.platformPostId));
+    return (autos || []).filter((a) => a.isActive !== false && a.platformPostId && old.has(a.platformPostId) && st(a).comments === 0)
+      .map((a) => ({ word: (a.keywords || []).join(', ') || '(any comment)', id: a._id || a.id }));
+  }
+
+  /** How a follower goal is going: the pace so far over the last 30 days against the pace the goal needs. */
+  function goalProgress(series, goal, now) {
+    if (!goal || !(goal.target > 0) || !series || !series.length) return null;
+    const cur = series[series.length - 1].value, due = Date.parse(goal.by + 'T23:59:59');
+    const wk = followerWindow(series, 30, 0, now), span = wk ? (wk.partial ? Math.max(1, (now - Date.parse(wk.since + 'T12:00:00')) / DAY) : 30) : 0, pace = wk ? wk.change / span * 7 : null;
+    const weeksLeft = Number.isFinite(due) ? Math.max(0, (due - now) / (7 * DAY)) : null;
+    const need = weeksLeft > 0 ? Math.max(0, goal.target - cur) / weeksLeft : null;
+    const pct = Math.max(0, Math.min(100, cur / goal.target * 100));
+    return { cur, target: goal.target, pct,
+             pace, need, weeksLeft, done: cur >= goal.target, onTrack: pace != null && need != null ? pace >= need : null };
+  }
+
   return { DAY, PERIODS, TYPE_LABEL, num, iso, fmt, classify, normalizePost, needsAnalyticsAccess, fetchPosts, fetchFollowers, fetchReach, load,
            totals, period, delta, followersChange, topPosts, perfByType, growth, wordsByPost, postWords, wordsWorking, whenWorks,
-           followersOn, followerWindow, windowStats, tileWindows, whatsWorking, olderWords, TYPE_NAME };
+           followersOn, followerWindow, windowStats, tileWindows, whatsWorking, olderWords, TYPE_NAME,
+           timeGrid, captionLength, hashtags, rhythm, worstPosts, wordFunnel, linkClicks, unusedWords, goalProgress };
 });

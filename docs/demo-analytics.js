@@ -23,7 +23,7 @@
       var likes = Math.round(reach * (0.04 + rnd(i, 2) * 0.03)), comments = Math.round(likes * (0.05 + rnd(i, 3) * 0.06));
       var saves = Math.round(reach * (0.012 + rnd(i, 4) * 0.02)), shares = Math.round(reach * (0.006 + rnd(i, 5) * 0.012));
       var follows = Math.round(reach * (0.002 + rnd(i, 6) * 0.004));
-      var caption = captions[i % captions.length] + (i >= captions.length ? ' (' + (Math.floor(i / captions.length) + 1) + ')' : '');
+      var caption = captions[i % captions.length] + (i >= captions.length ? ' (' + (Math.floor(i / captions.length) + 1) + ')' : '') + [' #smallbusiness #marketing', ' #marketing', ' #behindthescenes #smallbusiness', ''][i % 4];
       var code = 'DEMO' + (i < 9 ? '00' : i < 99 ? '0' : '') + (i + 1);
       out.push({
         postId: 'zp_' + (i + 1), status: 'published', content: caption, publishedAt: when.toISOString(), mediaType: type === 'reel' ? 'video' : type === 'photo' ? 'image' : 'carousel',

@@ -225,3 +225,17 @@ html{scroll-behavior:smooth}
   .app .promo select{width:auto;min-height:36px;padding:4px 8px}
   .app .promo button{padding:8px 12px;white-space:nowrap}
 }
+
+/* extra sections: heat map, goal meter, hints */
+.app .hint{margin:0 0 12px;color:var(--muted)}
+.app .hint b{color:var(--fg)}
+.app table.heat{border-collapse:separate;border-spacing:4px;width:100%;min-width:560px}
+.app table.heat th{font-weight:600;font-size:12px;color:var(--muted);text-align:left;padding:4px 6px}
+.app table.heat tbody th{color:var(--fg);white-space:nowrap}
+.app table.heat td{text-align:center;padding:10px 6px;border-radius:8px;font-family:var(--mono);font-size:13px;color:var(--fg);background:var(--raise)}
+.app table.heat td.no{color:var(--muted);opacity:.6}
+.app .meter{height:12px;border-radius:99px;background:var(--raise);overflow:hidden;margin:0 0 12px}
+.app .meter i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent-strong))}
+.app .goalform{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-top:12px}
+.app .goalform label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:var(--muted)}
+.app .goalform input{font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 11px;min-height:40px}
