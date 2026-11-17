@@ -17,7 +17,7 @@
   function svgNode(s) { var t = document.createElement('template'); t.innerHTML = s; return t.content.firstChild; }
   function ico(name) { return svgNode('<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="' + ICONS[name] + '"/></svg>'); }
 
-  var NAV = [['top', 'home', 'Dashboard'], ['analytics', 'bars', 'Analytics'], ['words', 'chat', 'Comment Words'], ['perf', 'bars', 'Performance by Type'], ['top-posts', 'star', 'Top Posts'],
+  var NAV = [['top', 'home', 'Dashboard'], ['analytics', 'bars', 'Analytics'], ['words', 'chat', 'Comment Words'], ['top-posts', 'star', 'Top Posts'], ['perf', 'bars', 'Performance by Type'],
              ['growth', 'trend', 'Growth'], ['posts', 'file', 'Posted'], ['working', 'star', 'What’s Working']];
 
   // ------------------------------------------------------------------ the frame: sidebar (brand, sections, your account) + main
@@ -292,7 +292,7 @@
     }
 
     var grid = el('div', { class: 'grid' });
-    function paint() { stripe.replaceChildren(facts()); grid.replaceChildren(analyticsCard(), wordsCard(), perfCard(), topCard(), growthCard(), postedCard(), workingCard()); }
+    function paint() { stripe.replaceChildren(facts()); grid.replaceChildren(analyticsCard(), wordsCard(), topCard(), perfCard(), growthCard(), postedCard(), workingCard()); }
     async function refresh() {
       d.loading = true; stripe.replaceChildren(facts());
       var res = await Promise.all([A.load(call, acct), ctx.loadAutomations(true).catch(function (e) { return e; }), ctx.loadPosts()]);
