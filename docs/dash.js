@@ -1,5 +1,5 @@
-/* The dashboard, built from the original ManyReply design: sidebar, facts strip, then Posted, Analytics, Performance by type,
- * Top posts, Growth, What's working, Words from older posts, Comment words. app.js hands over what it owns; numbers come from analytics.js. */
+/* The dashboard, built from the original ManyReply design: sidebar, facts strip, then Analytics, Comment words, Performance by type,
+ * Top posts, Growth, Posted, What's working. app.js hands over what it owns; numbers come from analytics.js. */
 (function () {
   'use strict';
   var A = window.MRA;
@@ -17,8 +17,8 @@
   function svgNode(s) { var t = document.createElement('template'); t.innerHTML = s; return t.content.firstChild; }
   function ico(name) { return svgNode('<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="' + ICONS[name] + '"/></svg>'); }
 
-  var NAV = [['top', 'home', 'Dashboard'], ['posts', 'file', 'Posted'], ['analytics', 'bars', 'Analytics'], ['perf', 'bars', 'Performance by Type'], ['top-posts', 'star', 'Top Posts'],
-             ['growth', 'trend', 'Growth'], ['working', 'star', 'What’s Working'], ['older', 'link', 'Words from Older Posts'], ['words', 'chat', 'Comment Words']];
+  var NAV = [['top', 'home', 'Dashboard'], ['analytics', 'bars', 'Analytics'], ['words', 'chat', 'Comment Words'], ['perf', 'bars', 'Performance by Type'], ['top-posts', 'star', 'Top Posts'],
+             ['growth', 'trend', 'Growth'], ['posts', 'file', 'Posted'], ['working', 'star', 'What’s Working']];
 
   // ------------------------------------------------------------------ the frame: sidebar (brand, sections, your account) + main
   function frame(ctx, content, onHome) {
@@ -264,7 +264,7 @@
       return card('growth', 'trend', 'Growth', sub, null, body);
     }
 
-    // ---- What's working, Words from older posts, Comment words
+    // ---- What's working, Comment words
     function workingCard() {
       var body;
       if (d.loading && !d.data) body = el('div', { class: 'skeleton' });
@@ -279,19 +279,6 @@
       }
       return card('working', 'star', 'What’s working', 'Your posts by type, weekday, posting time and comment word, best first', null, body);
     }
-    function olderCard() {
-      var body, ow = d.data ? A.olderWords(d.autos || [], posts(), now(), 30) : [];
-      if (!d.autos) body = el('div', { class: 'skeleton' });
-      else body = !ow.length ? el('div', { class: 'empty' }, 'No words on older posts yet. A word shows up here once its post is more than 30 days old.') : table('wins', [['Comment word'], ['Link sent'], ['Word comments', 1], ['DMs', 1], ['Clicks', 1]], ow.map(function (x) {
-        var u = safeUrl(x.link);
-        return el('tr', null, el('td', null, el('span', { class: 'word' }, x.word), x.active ? null : [' ', el('span', { class: 'pill paused' }, 'paused')]),
-          el('td', null, u ? el('a', { href: u, target: '_blank', rel: 'noopener' }, ctx.clip(u.replace(/^https:\/\//, ''), 60)) : '–'),
-          el('td', { class: 'n' }, f0(x.comments)), el('td', { class: 'n' }, f0(x.dms)), el('td', { class: 'n' }, el('span', { class: 'clk' + (x.clicks ? ' hot' : '') }, String(x.clicks))));
-      }));
-      var total = ow.reduce(function (a, x) { return a + x.clicks; }, 0);
-      return el('section', { class: 'card', id: 'older' }, el('div', { class: 'head' }, ico('link'), el('div', null, el('h2', null, 'Words from older posts ', el('span', { class: 'clk' + (total ? ' hot' : '') }, String(total))),
-        el('p', null, 'Words on posts more than 30 days old that still DM a link. Best first: link clicks, then links sent, then word comments.'))), body);
-    }
     function wordsCard() {
       var body;
       if (!d.autos) body = el('div', { class: 'skeleton' });
@@ -305,7 +292,7 @@
     }
 
     var grid = el('div', { class: 'grid' });
-    function paint() { stripe.replaceChildren(facts()); grid.replaceChildren(postedCard(), analyticsCard(), perfCard(), topCard(), growthCard(), workingCard(), olderCard(), wordsCard()); }
+    function paint() { stripe.replaceChildren(facts()); grid.replaceChildren(analyticsCard(), wordsCard(), perfCard(), topCard(), growthCard(), postedCard(), workingCard()); }
     async function refresh() {
       d.loading = true; stripe.replaceChildren(facts());
       var res = await Promise.all([A.load(call, acct), ctx.loadAutomations(true).catch(function (e) { return e; }), ctx.loadPosts()]);
