@@ -2,7 +2,7 @@
 @font-face { font-family: 'Figtree'; src: url(fonts/figtree-latin-wght-normal.woff2) format('woff2'); font-weight: 300 900; font-display: swap; }
 
 :root {
-  --ground: #EDF1F4; --surface: #FFFFFF; --soft: #F5F7F9; --ink: #162033; --muted: #566478; --line: #D3DBE4;
+  --ground: #EDF1F4; --surface: #FFFFFF; --soft: #F5F7F9; --ink: #162033; --muted: #364254; --line: #D3DBE4;
   --blue: #1A6BFF; --on-blue: #FFFFFF; --hl: #FFE14D; --on-hl: #162033; --tint: #E3ECFF; --bubble-in: #E5EAF0;
   --deep: #162033; --on-deep: #FFFFFF; --focus: #1A6BFF;
   --display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
@@ -11,7 +11,7 @@
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --ground: #0E1520; --surface: #172131; --soft: #1D2A3C; --ink: #E8EEF6; --muted: #9AA8BA; --line: #2B394D;
+    --ground: #0E1520; --surface: #172131; --soft: #1D2A3C; --ink: #E8EEF6; --muted: #C6D1DF; --line: #2B394D;
     --blue: #4C8DFF; --on-blue: #08101C; --tint: #1B2C4A; --bubble-in: #263650; --deep: #0A1019; --on-deep: #E8EEF6; --focus: #7FB0FF;
     color-scheme: dark;
   }

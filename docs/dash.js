@@ -26,8 +26,7 @@
     ['Getting around', [
       ['The top strip', 'Shows your @account, followers and reach, and when the numbers were last updated. The theme button switches between Auto, Light and Dark.'],
       ['The left menu', 'Jump to any section. Your account and the Disconnect button are at the bottom. If you have more than one Instagram account, switch between them there.'],
-      ['New word', 'Sets up a comment-to-DM automation: choose a post (or any post), the word people comment, the DM they get and the link inside it. You can also ask people to follow you first.'],
-      ['Try the demo', 'On the sign-in page. It fills the dashboard with sample data so you can look around without connecting anything.']]],
+      ['New word', 'Sets up a comment-to-DM automation: choose a post (or any post), the word people comment, the DM they get and the link inside it. You can also ask people to follow you first.']]],
     ['Your results', [
       ['Analytics', 'The headline numbers for the period you pick, from 24 hours to 1 year. The arrow and percentage compare it with the period before. The 1 year view has nothing to compare with.'],
       ['Comment words', 'Every word you have set up, with how many comments it got, DMs it sent and link clicks. Pause, edit or delete a word here. A post can have one live word.'],

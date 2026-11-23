@@ -155,4 +155,3 @@ The dashboard in `docs/app/` follows the layout of the original ManyReply dashbo
 - **Needs Zernio analytics.** Usage-based Zernio plans include it. Older plans need Zernio's Analytics add-on; without it the dashboard says so, and the words still work.
 - **Word numbers follow the post.** Zernio keeps running totals for each word, so a word's comments, DMs and link clicks are counted in the period its post was published, the same way the original dashboard does it.
 - **Growth:** click a day, or pick From and To dates, to see the posts around it. Follower history is limited to the last 89 days (a Zernio limit).
-- **Try it first.** "Try the demo" runs all of this on sample data with no Zernio account.

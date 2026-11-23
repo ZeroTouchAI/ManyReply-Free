@@ -163,14 +163,48 @@
       el('a', { class: 'btn', href: SIGNUP, target: '_blank', rel: 'noopener sponsored' }, 'Create a free Zernio account'),
       IS_REFERRAL && el('p', { class: 'small' }, 'This is a referral link. If you sign up through it, the maker of this tool earns a commission from Zernio, and your price stays the same. Sign up in this browser so the referral is counted.'),
       el('ol', { class: 'steps-help' }, el('li', null, 'Connect your Instagram account in Zernio.'), el('li', null, 'Create an API key.'), el('li', null, 'Paste it above.')));
-    shell(el('div', { class: 'connect' },
-      el('div', { class: 'connect-hero' },
-        el('h1', null, 'Turn a comment into a DM'),
-        el('p', { class: 'lead' }, 'Pick a word. When someone comments it on your Instagram post, they get your link by DM. People who don’t follow you yet are asked to follow first.'),
-        el('div', { class: 'demo' }, demo)),
-      el('div', { class: 'panel connect-form' }, el('h2', null, 'Connect Zernio'), form, referral)), false);
+    shell(el('div', null,
+      el('div', { class: 'connect' },
+        el('div', { class: 'connect-hero' },
+          el('h1', null, 'Turn a comment into a DM'),
+          el('p', { class: 'lead' }, 'Pick a word. When someone comments it on your Instagram post, they get your link by DM. People who don’t follow you yet are asked to follow first.'),
+          el('ul', { class: 'badges' }, ['Free', 'Open source', 'No server', 'Your key stays in your browser'].map((t) => el('li', null, t))),
+          el('div', { class: 'demo' }, demo)),
+        el('div', { class: 'panel connect-form' }, el('h2', null, 'Connect Zernio'), form, referral)),
+      moreInfo()), false);
     playDemo(demo);
     keyInput.focus({ preventScroll: true });
+  }
+
+  /** The sections under the sign-in form: what this is, how it works, what it costs, and the usual questions. */
+  function moreInfo() {
+    const card = (h, t) => el('li', null, el('h3', null, h), el('p', null, t));
+    const section = (id, h, lead, body) => el('section', { class: 'info', 'aria-labelledby': id },
+      el('h2', { id }, h), lead && el('p', { class: 'info-lead' }, lead), body);
+    const faq = (q, a) => el('details', null, el('summary', null, q), el('p', null, a));
+    return el('div', { class: 'connect-more' },
+      section('how-h', 'How it works', 'Three steps. Setup takes a few minutes, and after that it runs by itself.',
+        el('ol', { class: 'cards numbered' },
+          card('Connect Zernio', 'Zernio is the service that links your Instagram account. Paste your Zernio API key above. It is checked once and kept in this browser only.'),
+          card('Pick a post and a word', 'Choose one of your posts, or any post. Type the word people should comment, write the DM they get and add your link.'),
+          card('Replies go out by themselves', 'When someone comments the word, they receive your DM. People who do not follow you yet are asked to follow first, then get the link.'))),
+      section('get-h', 'What you get', 'Everything below is free and runs in your browser.',
+        el('ul', { class: 'cards' },
+          card('Comment to DM', 'Set a word per post. Pause or change it any time from the list of your words.'),
+          card('Follow first', 'Ask people to follow you before they get the link, so each giveaway also grows your account.'),
+          card('Analytics', 'Reach, reactions, top and weakest posts, best times to post, caption length, hashtags and your growth over time.'),
+          card('Inbox and saved replies', 'Read and answer your DMs, keep saved replies for common questions, and tag contacts or leave notes on them.'))),
+      section('free-h', 'Free, and private', null,
+        el('div', { class: 'two' },
+          el('div', null, el('h3', null, 'Your key stays with you'), el('p', null, 'There is no ManyReply server and no account. Your key is stored only in this browser and sent only to zernio.com. Disconnect removes it.')),
+          el('div', null, el('h3', null, 'What it costs'), el('p', null, 'This tool is free and open source. Zernio is a separate service with its own plans, and its first two connected accounts are free. Check their pricing before you rely on it.')))),
+      section('faq-h', 'Questions', null,
+        el('div', { class: 'faq' },
+          faq('Where do I find my Zernio API key?', 'In Zernio, open API keys and create one. Connect your Instagram account in Zernio first, or this page will tell you no account was found.'),
+          faq('Is it safe to paste my key here?', 'The page has no server and may only talk to zernio.com. The code is public, so anyone can check that. You can also create a key just for this tool and delete it later.'),
+          faq('Does it work with other networks?', 'No. It works with Instagram comments on your own posts.'),
+          faq('Why do some analytics numbers say they are unavailable?', 'Some Zernio analytics need an add-on on your Zernio plan. Those cards say so, and everything else keeps working.'),
+          faq('Who makes this?', 'ZeroTouchAI. It is not affiliated with Instagram, Meta or Zernio.'))));
   }
 
   async function connect(key, remember) {
