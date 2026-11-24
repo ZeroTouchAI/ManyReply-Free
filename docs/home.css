@@ -9,13 +9,6 @@
   --body: 'Figtree', 'Segoe UI', system-ui, -apple-system, sans-serif;
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ground: #0E1520; --surface: #172131; --soft: #1D2A3C; --ink: #E8EEF6; --muted: #C6D1DF; --line: #2B394D;
-    --blue: #4C8DFF; --on-blue: #08101C; --tint: #1B2C4A; --bubble-in: #263650; --deep: #0A1019; --on-deep: #E8EEF6; --focus: #7FB0FF;
-    color-scheme: dark;
-  }
-}
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

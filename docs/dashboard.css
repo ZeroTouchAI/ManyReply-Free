@@ -211,10 +211,13 @@ html{scroll-behavior:smooth}
 @keyframes sheen{to{background-position:-200% 0}}
 
 /* the page behind and below the app follows the same choice */
-:root[data-theme="dark"] body{background:#0A1023;color:#E9EDFA}
-:root[data-theme="light"] body{background:#F3F5FB;color:#111833}
-:root[data-theme="dark"] .site-foot{--line:#1F2B52;--muted:#C3CCEB;--ink:#E9EDFA;--blue:#7AA7FF}
-:root[data-theme="light"] .site-foot{--line:#E2E7F3;--muted:#363F5E;--ink:#111833;--blue:#3B6CF6}
+/* the page behind and below the app follows the theme; the home and sign-in pages are always light */
+body:has(.app){background:#F3F5FB;color:#111833}
+body:has(.app) .site-foot{--line:#E2E7F3;--muted:#363F5E;--ink:#111833;--blue:#3B6CF6;--surface:#FFFFFF}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body:has(.app){background:#0A1023;color:#E9EDFA}
+:root:not([data-theme="light"]) body:has(.app) .site-foot{--line:#1F2B52;--muted:#C3CCEB;--ink:#E9EDFA;--blue:#7AA7FF;--surface:#0F1731}}
+:root[data-theme="dark"] body:has(.app){background:#0A1023;color:#E9EDFA}
+:root[data-theme="dark"] body:has(.app) .site-foot{--line:#1F2B52;--muted:#C3CCEB;--ink:#E9EDFA;--blue:#7AA7FF;--surface:#0F1731}
 .app .wlist{margin-top:14px}
 .app .head{justify-content:flex-start;flex-wrap:nowrap;align-items:flex-start;margin-bottom:14px}
 .app .head>div:not(.aside){min-width:0}
