@@ -189,3 +189,12 @@ test('failures say what happened and what to do, with Zernio\'s own words kept',
   assert.equal(down.code, 'network');
   assert.match(down.message, /Could not reach Zernio/);
 });
+
+test('accounts: profileId given as an object, or the id given as id, still works', async () => {
+  const client = MR.createClient('k', async () => ({ ok: true, status: 200, text: async () => JSON.stringify({ accounts: [
+    { id: 'a1', platform: 'instagram', username: 'x', profileId: { _id: 'p1', name: 'Main' } },
+    { _id: 'a2', platform: 'instagram', username: 'y', profileId: 'p2' },
+    { _id: 'a3', platform: 'twitter', profileId: 'p3' }] }) }));
+  const got = await client.accounts();
+  assert.deepEqual(got.map((a) => [a._id, a.profileId]), [['a1', 'p1'], ['a2', 'p2']]);
+});

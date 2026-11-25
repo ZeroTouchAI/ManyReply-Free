@@ -64,7 +64,11 @@
     const id = (v) => encodeURIComponent(v);
     return {
       call,
-      async accounts() { return ((await call('GET', '/accounts')).accounts || []).filter((a) => a.platform === 'instagram'); },
+      async accounts() {
+        const pid = (v) => (v && typeof v === 'object' ? String(v._id || v.id || '') : v);
+        return ((await call('GET', '/accounts')).accounts || []).filter((a) => a.platform === 'instagram')
+          .map((a) => ({ ...a, _id: a._id || a.id, profileId: pid(a.profileId) }));
+      },
       async posts(accountId) { return (await call('GET', `/accounts/${id(accountId)}/posts`)).posts || []; },
       async automations(profileId) {
         return (await call('GET', '/comment-automations' + (profileId ? `?profileId=${id(profileId)}` : ''))).automations || [];

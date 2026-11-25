@@ -200,12 +200,15 @@
           card('Saved replies and goals', 'Keep saved replies for common questions, set a follower goal, and see which words funnel into clicks.'))),
       section('dash-h', 'Inside the dashboard', 'Once you are connected, these are the sections, in this order.',
         el('ul', { class: 'cards' },
-          card('Inbox', 'Read and answer your Instagram DMs. Tag people and keep private notes.'),
+          card('Comment words', 'Set a word on a post. Anyone who comments it gets your link by DM. Pause, edit or delete words any time.'),
           card('Schedule', 'See which posts are scheduled and exactly when each one goes out.'),
-          card('Posted', 'Every post, newest first, with how people reacted to it.'),
           card('Analytics', 'Reach, views, likes, saves, sends and link clicks for any period, compared with the one before.'),
+          card('Inbox', 'Read and answer your Instagram DMs in one place. Tag people and keep private notes.'),
+          card('Saved replies', 'Write the answers you send often once, then drop them into any reply.'),
+          card('Posted', 'Every post, newest first, with how people reacted to it.'),
           card('Performance by type', 'Photos, carousels and reels side by side, so you can see which format works.'),
           card('Growth', 'Follower history in a chart. Click any day to see what you posted around it.'),
+          card('Follower goal', 'Choose how many followers you want and by when, and see if you are on track.'),
           card('Top posts', 'Your ten best posts by reach, and what they have in common.'),
           card('Best time to post', 'A red, yellow and green grid of the days and hours your posts did best.'),
           card('Posts to learn from', 'Your weakest posts, so you can spot what to do less of.'),
@@ -339,7 +342,10 @@
     try {
       const autos = await loadAutomations();
       if (editId) existing = autos.find((a) => a.id === editId) || null;
-    } catch (e) { return connectErrorToHome(e); }
+    } catch (e) {
+      if (editId) return connectErrorToHome(e);
+      S.automations = []; toast('Could not read your existing words (' + (e.message || e) + '). You can still create one.');
+    }
     if (id !== renderId) return;
     if (editId && (!existing || !MR.isEditable(existing))) { toast('That word can’t be edited here.'); return go('#/'); }
 
@@ -548,7 +554,8 @@
   }
 
   function connectErrorToHome(e) {
-    root.querySelector('.page') && root.querySelector('.page').replaceChildren(el('div', { class: 'empty' }, el('h3', null, 'Could not load your words'), el('p', null, e.message),
+    const box = root.querySelector('.editor-wrap') || root.querySelector('.page');
+    if (box) box.replaceChildren(el('div', { class: 'empty' }, el('h3', null, 'Could not load your words'), el('p', null, e.message),
       el('a', { class: 'btn', href: '#/' }, 'Back')));
   }
 
