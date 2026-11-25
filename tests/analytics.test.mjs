@@ -158,3 +158,16 @@ test('extra views: grid, captions, hashtags, rhythm, worst posts, funnel, links,
   assert.equal(gp.cur, 1100); assert.equal(Math.round(gp.pct), 85); assert.ok(gp.pace > 20 && gp.pace < 30); assert.equal(gp.done, false);
   assert.equal(A.goalProgress(series, null, now), null);
 });
+
+test('scheduled posts: Instagram only, soonest first, unusable ones dropped', async () => {
+  const raw = [
+    { _id: 'b', status: 'scheduled', content: ' Later ', platforms: [{ platform: 'instagram', scheduledFor: '2030-01-02T10:00:00Z' }] },
+    { _id: 'a', status: 'scheduled', content: 'Soon', mediaItems: [{}, {}], platforms: [{ platform: 'instagram', scheduledFor: '2030-01-01T10:00:00Z' }] },
+    { _id: 'x', status: 'scheduled', platforms: [{ platform: 'twitter', scheduledFor: '2030-01-01T09:00:00Z' }] },
+    { _id: 'n', status: 'scheduled', platforms: [{ platform: 'instagram' }] },
+    { _id: 'p', status: 'published', platforms: [{ platform: 'instagram', scheduledFor: '2030-01-01T09:00:00Z' }] },
+  ];
+  const got = await A.fetchScheduled(async (m, p) => { assert.equal(m, 'GET'); assert.ok(p.startsWith('/posts?status=scheduled&accountId=acc1')); return { posts: raw }; }, { _id: 'acc1' });
+  assert.deepEqual(got.map((x) => x.id), ['a', 'b']);
+  assert.equal(got[0].media, 2); assert.equal(got[1].text, 'Later');
+});

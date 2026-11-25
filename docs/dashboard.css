@@ -290,3 +290,6 @@ body:has(.app) .site-foot{--line:#E2E7F3;--muted:#363F5E;--ink:#111833;--blue:#3
 .app dialog.helpdlg h3{margin:18px 0 8px;font:800 13px/1.2 var(--display);text-transform:uppercase;letter-spacing:.06em;color:var(--accent-strong)}
 .app dialog.helpdlg dt{font-weight:700;margin-top:10px}
 .app dialog.helpdlg dd{margin:2px 0 0;color:var(--muted);overflow-wrap:anywhere}
+.app .post.sched{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;padding:10px 0}
+.app .post.sched .d{font-weight:700;white-space:nowrap}
+.app .post.sched .cap{flex:1 1 220px;min-width:0;overflow-wrap:anywhere;color:var(--fg)}

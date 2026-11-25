@@ -352,8 +352,31 @@
              pace, need, weeksLeft, done: cur >= goal.target, onTrack: pace != null && need != null ? pace >= need : null };
   }
 
+  // ---------------------------------------------------------------- scheduled posts
+
+  /** One scheduled post (GET /posts?status=scheduled): when it goes out, its caption, and where. Null when there is no usable time. */
+  function normalizeScheduled(raw) {
+    if (!raw || typeof raw !== 'object') return null;
+    const st = String(raw.status || 'scheduled').toLowerCase();
+    if (st !== 'scheduled' && st !== 'pending_approval') return null;
+    const plats = Array.isArray(raw.platforms) ? raw.platforms : [];
+    const ig = plats.find((p) => p && String(p.platform || '').toLowerCase() === 'instagram') || null;
+    if (plats.length && !ig) return null;
+    const when = (ig && ig.scheduledFor) || raw.scheduledFor || '';
+    const t = Date.parse(when);
+    if (!Number.isFinite(t)) return null;
+    const media = Array.isArray(raw.mediaItems) ? raw.mediaItems.length : 0;
+    return { id: String(raw._id || raw.id || t), t, date: new Date(t).toISOString(), text: String(raw.content || raw.title || '').trim(),
+      approval: st === 'pending_approval', media, tz: raw.timezone || '' };
+  }
+  /** The Instagram posts scheduled for this account, soonest first. */
+  async function fetchScheduled(call, account) {
+    const res = await call('GET', '/posts?status=scheduled&accountId=' + encodeURIComponent(account._id));
+    return ((res && res.posts) || []).map(normalizeScheduled).filter(Boolean).sort((a, b) => a.t - b.t);
+  }
+
   return { DAY, PERIODS, TYPE_LABEL, num, iso, fmt, classify, normalizePost, needsAnalyticsAccess, fetchPosts, fetchFollowers, fetchReach, load,
            totals, period, delta, followersChange, topPosts, perfByType, growth, wordsByPost, postWords, wordsWorking, whenWorks,
            followersOn, followerWindow, windowStats, tileWindows, whatsWorking, olderWords, TYPE_NAME,
-           timeGrid, captionLength, hashtags, rhythm, worstPosts, wordFunnel, linkClicks, unusedWords, goalProgress };
+           normalizeScheduled, fetchScheduled, timeGrid, captionLength, hashtags, rhythm, worstPosts, wordFunnel, linkClicks, unusedWords, goalProgress };
 });
