@@ -38,9 +38,7 @@ Your key is stored only in your browser (this tab, unless you tick "keep me conn
 The page's content security policy forbids it from talking to anyone else.
 
 **Publish your own copy:** fork this repository, then in **Settings, Pages** choose **Deploy from a branch**, branch
-`main`, folder `/docs`. To use your own Zernio partner link on the sign-up button, put it in `docs/config.js`; a
-disclosure that it is a referral link then appears next to the button. Leave it empty and the button goes to plain
-zernio.com. Run the logic tests with `node --test tests/lib.test.mjs`.
+`main`, folder `/docs`. Run the logic tests with `node --test tests/lib.test.mjs`.
 
 Fonts (Bricolage Grotesque and Figtree) are self-hosted under the SIL Open Font License; the licences are in `docs/fonts/`.
 

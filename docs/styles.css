@@ -84,7 +84,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .connect-hero .demo { margin-top: 2rem; }
 .connect-form h2 { margin-bottom: 0.2rem; }
 .referral { margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1px solid var(--line); font-size: 0.925rem; }
-.referral .btn { margin-top: 0.7rem; }
+.referral .btn-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.7rem; }
 .small { font-size: 0.82rem; color: var(--muted); margin-top: 0.6rem; }
 .privacy { margin-top: 1rem; font-size: 0.875rem; color: var(--muted); }
 .steps-help { margin: 0.6rem 0 0; padding-left: 1.2rem; color: var(--muted); font-size: 0.9rem; }

@@ -3,8 +3,8 @@
   'use strict';
   const MR = window.MR;
   const CFG = window.MANYREPLY_CONFIG || {};
-  const SIGNUP = CFG.zernioSignupUrl || 'https://zernio.com';
-  const IS_REFERRAL = !!CFG.zernioSignupUrl;
+  const ZERNIO_HOME = 'https://zernio.com';
+  const ZERNIO_KEYS = 'https://zernio.com/dashboard/api-keys';
   const root = document.getElementById('app');
   const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -154,15 +154,19 @@
       }
     } },
       el('div', { class: 'field' }, el('label', { for: keyId }, 'Zernio API key'), keyInput,
-        el('p', { class: 'hint' }, 'In Zernio, open API keys and create one.')),
+        el('p', { class: 'hint' }, 'Not sure where to find it? ', el('a', { href: ZERNIO_KEYS, target: '_blank', rel: 'noopener' }, 'Open your Zernio API keys page'), ' and create one.')),
       el('label', { class: 'check' }, remember, el('span', null, 'Keep me connected on this device', el('small', null, 'Otherwise you are disconnected when you close this tab.'))),
       el('div', { style: 'margin-top:1.2rem' }, submit), status,
       el('p', { class: 'privacy' }, 'This page has no server. Your key is stored only in this browser and sent only to zernio.com.'));
     const referral = el('div', { class: 'referral' },
       el('p', null, el('strong', null, 'New to Zernio?'), ' Zernio connects your Instagram account. Its first two connected accounts are free (see their pricing).'),
-      el('a', { class: 'btn', href: SIGNUP, target: '_blank', rel: 'noopener sponsored' }, 'Create a free Zernio account'),
-      IS_REFERRAL && el('p', { class: 'small' }, 'This is a referral link. If you sign up through it, the maker of this tool earns a commission from Zernio, and your price stays the same. Sign up in this browser so the referral is counted.'),
-      el('ol', { class: 'steps-help' }, el('li', null, 'Connect your Instagram account in Zernio.'), el('li', null, 'Create an API key.'), el('li', null, 'Paste it above.')));
+      el('div', { class: 'btn-row' },
+        el('a', { class: 'btn', href: ZERNIO_HOME, target: '_blank', rel: 'noopener' }, 'Create a free Zernio account'),
+        el('a', { class: 'btn', href: ZERNIO_KEYS, target: '_blank', rel: 'noopener' }, 'Get your API key')),
+      el('ol', { class: 'steps-help' },
+        el('li', null, 'Create a Zernio account and connect your Instagram account in it.'),
+        el('li', null, 'Open ', el('a', { href: ZERNIO_KEYS, target: '_blank', rel: 'noopener' }, 'your Zernio API keys page'), ' and create a key.'),
+        el('li', null, 'Paste it above.')));
     shell(el('div', null,
       el('div', { class: 'connect' },
         el('div', { class: 'connect-hero' },
@@ -200,7 +204,7 @@
           el('div', null, el('h3', null, 'What it costs'), el('p', null, 'This tool is free and open source. Zernio is a separate service with its own plans, and its first two connected accounts are free. Check their pricing before you rely on it.')))),
       section('faq-h', 'Questions', null,
         el('div', { class: 'faq' },
-          faq('Where do I find my Zernio API key?', 'In Zernio, open API keys and create one. Connect your Instagram account in Zernio first, or this page will tell you no account was found.'),
+          faq('Where do I find my Zernio API key?', 'Sign in to Zernio and open the API keys page (zernio.com/dashboard/api-keys), then create a key. Connect your Instagram account in Zernio first, or this page will tell you no account was found.'),
           faq('Is it safe to paste my key here?', 'The page has no server and may only talk to zernio.com. The code is public, so anyone can check that. You can also create a key just for this tool and delete it later.'),
           faq('Does it work with other networks?', 'No. It works with Instagram comments on your own posts.'),
           faq('Why do some analytics numbers say they are unavailable?', 'Some Zernio analytics need an add-on on your Zernio plan. Those cards say so, and everything else keeps working.'),
