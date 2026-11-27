@@ -16,7 +16,8 @@
   function svgNode(s) { var t = document.createElement('template'); t.innerHTML = s; return t.content.firstChild; }
   function ico(name) { return svgNode('<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="' + ICONS[name] + '"/></svg>'); }
 
-  var NAV = [['top', 'home', 'Dashboard'], ['words', 'chat', 'Comment Words'], ['schedule', 'clock', 'Schedule'], ['analytics', 'bars', 'Analytics'], ['inbox', 'mail', 'Inbox'], ['replies', 'file', 'Saved Replies'], ['posts', 'file', 'Posted'], ['perf', 'bars', 'Performance by Type'], ['growth', 'trend', 'Growth'], ['goal', 'star', 'Goal'], ['top-posts', 'star', 'Top Posts'], ['when', 'clock', 'Best Time to Post'], ['worst', 'eye', 'Posts to Learn From'], ['tags', 'link', 'Hashtags'], ['working', 'star', 'What’s Working'], ['captions', 'file', 'Caption Length'], ['rhythm', 'trend', 'Posting Rhythm'], ['funnel', 'chat', 'Word Funnel'], ['links', 'link', 'Link Clicks'], ['unused', 'chat', 'Words Nobody Used']];
+  var FOOT = document.querySelector('footer.site-foot');
+  var NAV = [['top', 'home', 'Dashboard'], ['words', 'chat', 'Comment Words'], ['analytics', 'bars', 'Analytics'], ['inbox', 'mail', 'Inbox'], ['replies', 'file', 'Saved Replies'], ['growth', 'trend', 'Growth'], ['posts', 'file', 'Posted'], ['perf', 'bars', 'Performance by Type'], ['goal', 'star', 'Goal'], ['when', 'clock', 'Best Time to Post'], ['top-posts', 'star', 'Top Posts'], ['worst', 'eye', 'Posts to Learn From'], ['tags', 'link', 'Hashtags'], ['working', 'star', 'What’s Working'], ['captions', 'file', 'Caption Length'], ['rhythm', 'trend', 'Posting Rhythm'], ['funnel', 'chat', 'Word Funnel'], ['links', 'link', 'Link Clicks'], ['unused', 'chat', 'Words Nobody Used']];
 
   // ------------------------------------------------------------------ the frame: sidebar (brand, sections, your account) + main
   // ------------------------------------------------------------------ Help: what every part does, in plain words
@@ -25,21 +26,20 @@
       ['The top strip', 'Shows your @account, followers and reach, and when the numbers were last updated. The theme button switches between Auto, Light and Dark.'],
       ['The left menu', 'Jump to any section. Your account and the Disconnect button are at the bottom. If you have more than one Instagram account, switch between them there.'],
       ['New word', 'Sets up a comment-to-DM automation: choose a post (or any post), the word people comment, the DM they get and the link inside it. You can also ask people to follow you first.']]],
-    ['Set up, schedule and analytics', [
+    ['Set up and analytics', [
       ['Comment words', 'Every word you have set up, with how many comments it got, DMs it sent and link clicks. Pause, edit or delete a word here. A post can have one live word.'],
-      ['Schedule', 'Your upcoming Instagram posts that are scheduled in Zernio, soonest first, with the day and time each one goes out. This list is read only: schedule or change posts in Zernio, then press Update now.'],
       ['Analytics', 'The headline numbers for the period you pick, from 24 hours to 1 year. The arrow and percentage compare it with the period before. The 1 year view has nothing to compare with.']]],
     ['Messages', [
       ['Inbox', 'Read and answer your Instagram DMs. Open a conversation to see it, write a reply and press Send. If the person last wrote over 24 hours ago, Instagram only allows a reply sent as a “human agent” message, and the dashboard sends it that way (up to 7 days).'],
       ['Tags and notes', 'In a conversation you can tag the person (for example hot-lead) and keep a private note. Use the tag buttons above the list to filter your inbox.'],
       ['Saved replies', 'Write messages you send often once, then insert them into a reply from the drop-down in the inbox.']]],
     ['Your posts and goal', [
-      ['Posted', 'All your posts, newest first. Each one has a row of reactions: reached (people who saw it), views, likes, comments, saves, sends (shared by DM), follows (new followers from the post), word comments (comments that used your word) and link clicks (taps on the link in your DM). Open a post for the full detail.'],
-      ['Performance by type', 'Photos, carousels and reels side by side, so you can see which format works best for you.'],
       ['Growth', 'Followers over time. Click a day to see the posts around it, or pick two dates to see what you posted and how many followers you gained between them. Follower history goes back 89 days.'],
+      ['Performance by type', 'Photos, carousels and reels side by side, so you can see which format works best for you.'],
+      ['Posted', 'All your posts, newest first. Each one has a row of reactions: reached (people who saw it), views, likes, comments, saves, sends (shared by DM), follows (new followers from the post), word comments (comments that used your word) and link clicks (taps on the link in your DM). Open a post for the full detail.'],
       ['Goal', 'Set a follower target (how many followers you want) and the date to reach it. The bar shows how far along you are, how many new followers a week you need, and how many you have been gaining.'],
-      ['Top posts', 'Your best posts of the last 60 days, ranked by reach, with saves, sends and follows next to each. “x usual” compares its reach with your normal post (2x means twice as many people).'],
       ['Best time to post', 'A grid of weekdays and times of day. Green is your best average reach, red is your lowest. The number in each square is the average reach, and an empty square means no posts then.'],
+      ['Top posts', 'Your best posts of the last 60 days, ranked by reach, with saves, sends and follows next to each. “x usual” compares its reach with your normal post (2x means twice as many people).'],
       ['Posts to learn from', 'Your five lowest-reach posts of the last 60 days, and how they compare with your usual post. Look for what they have in common and do less of it.'],
       ['Hashtags', 'Hashtags you have used on at least two posts, ranked by average reach. “x usual” is how that compares with your normal post.'],
       ['What’s working', 'Your posts grouped by type, weekday, posting time and comment word, best first, with average reach, word comments and follows for each group.']]],
@@ -86,7 +86,9 @@
       el('div', { class: 'promo' },
         el('div', { class: 'who2' }, svgNode(IG), el('div', { style: 'min-width:0' }, el('b', null, '@' + acct.username), el('span', null, 'Connected on Instagram'))),
         picker, el('button', { class: 'dashbtn', type: 'button', onclick: ctx.signOut }, 'Disconnect')));
-    return el('div', { class: 'app' }, side, el('div', { class: 'main', id: 'top' }, content), help);
+    // The "More from the makers" footer lives inside the main column, so the left menu runs the full height of the page.
+    var foot = FOOT && FOOT.cloneNode(true);
+    return el('div', { class: 'app' }, side, el('div', { class: 'main', id: 'top' }, content, foot), help);
   }
 
   // ------------------------------------------------------------------ the dashboard
@@ -455,28 +457,6 @@
       return card('unused', 'chat', 'Words nobody used', sub, null, !u.length ? empty('Every live word has been used at least once. Nice.') : el('div', { class: 'wordchips' }, u.map(function (x) { return el('span', { class: 'word' }, x.word); })));
     }
 
-    // ---- Schedule: what Zernio will publish next (read only)
-    function scheduleCard() {
-      var sc = d.sched, body, fmt = function (t) { return new Date(t).toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }); };
-      if (!sc || sc.loading) body = el('div', { class: 'skeleton' });
-      else if (sc.error) body = el('div', { class: 'empty' }, 'Could not load your scheduled posts: ' + (sc.error.message || sc.error) + ' ', el('button', { class: 'dashbtn', type: 'button', onclick: loadSchedule }, 'Try again'));
-      else if (!sc.items.length) body = el('div', { class: 'empty' }, 'Nothing is scheduled for this account. Schedule a post in Zernio and it will show up here.');
-      else body = more(sc.items, function (rows) {
-        return el('div', { class: 'posts' }, rows.map(function (p) {
-          return el('div', { class: 'post sched' }, el('span', { class: 'd' }, fmt(p.t)), el('span', { class: 'cap' }, p.text ? p.text.slice(0, 160) : '(no caption)'),
-            p.approval ? el('span', { class: 'pill' }, 'Waiting for approval') : null, p.media ? el('span', { class: 'pill' }, p.media + (p.media === 1 ? ' file' : ' files')) : null);
-        }));
-      }, 10);
-      return card('schedule', 'clock', 'Schedule', 'Your next posts, soonest first. This is read only: schedule or change posts in Zernio, then press Update now.',
-        el('a', { class: 'dashbtn', href: 'https://zernio.com/dashboard', target: '_blank', rel: 'noopener' }, 'Open Zernio'), body);
-    }
-    async function loadSchedule() {
-      d.sched = { loading: true }; paint();
-      try { var items = await A.fetchScheduled(call, acct); if (!ctx.isCurrent()) return; d.sched = { items: items }; }
-      catch (e) { if (!ctx.isCurrent()) return; d.sched = { error: e }; }
-      paint();
-    }
-
     // ---- Inbox and Saved replies (inbox.js): messages come from Zernio, tags, notes and saved replies stay in this browser
     function fill(sec, icon, title, sub, aside, body) {
       sec.replaceChildren(el('div', { class: 'head' }, ico(icon), el('div', null, el('h2', null, title), el('p', null, sub)), aside && el('div', { class: 'aside' }, aside)), body);
@@ -484,20 +464,27 @@
     var inbox = window.MRInbox.mount({ el: el, acct: acct, call: call, toast: ctx.toast, safeUrl: safeUrl, clip: ctx.clip, fill: fill });
 
     var grid = el('div', { class: 'grid' });
-    function paint() { stripe.replaceChildren(facts()); grid.replaceChildren(wordsCard(), scheduleCard(), analyticsCard(), inbox.inboxCard(), inbox.repliesCard(), postedCard(), perfCard(), growthCard(), goalCard(), topCard(), timeCard(), worstCard(), tagsCard(), workingCard(),
+    // Shown while the numbers are being fetched, so the page never looks empty or stuck.
+    var loader = el('div', { class: 'loading', role: 'status', 'aria-live': 'polite' });
+    function showLoader() {
+      loader.hidden = !d.loading;
+      var kids = d.loading ? [el('span', { class: 'spin', 'aria-hidden': 'true' }), el('div', null, el('b', null, 'Loading your data'), el('span', null, 'Fetching your posts, followers and words from Zernio. This usually takes a few seconds.')), el('i', { class: 'bar', 'aria-hidden': 'true' })] : [];
+      loader.replaceChildren.apply(loader, kids);
+    }
+    function paint() { showLoader(); stripe.replaceChildren(facts()); grid.replaceChildren(wordsCard(), analyticsCard(), inbox.inboxCard(), inbox.repliesCard(), growthCard(), postedCard(), perfCard(), goalCard(), timeCard(), topCard(), worstCard(), tagsCard(), workingCard(),
         captionCard(), rhythmCard(), funnelCard(), linksCard(), unusedCard()); }
     async function refresh() {
-      d.loading = true; stripe.replaceChildren(facts());
+      d.loading = true; showLoader(); stripe.replaceChildren(facts());
       var res = await Promise.all([A.load(call, acct), ctx.loadAutomations(true).catch(function (e) { return e; }), ctx.loadPosts()]);
       if (!ctx.isCurrent()) return;
-      d.data = res[0]; d.autosError = res[1] instanceof Error ? res[1] : null; d.autos = res[1] instanceof Error ? [] : res[1]; d.picks = res[2]; d.loading = false;
+      d.data = res[0]; d.autosError = res[1] instanceof Error ? res[1] : null; d.autos = res[1] instanceof Error ? [] : res[1]; d.picks = res[2]; d.loading = false; showLoader();
       if (res[1] instanceof Error) ctx.toast(res[1].message);
       var keepOpen = Array.prototype.map.call(grid.querySelectorAll('details.post[open]'), function (n) { return n.querySelector('.d') && n.querySelector('.d').textContent; });
       paint();
-      loadSchedule();
       if (S.scrollTo) { var t = document.getElementById(S.scrollTo); S.scrollTo = null; if (t) t.scrollIntoView(); }
     }
-    ctx.mountApp(frame(ctx, [stripe, grid], true));
+    ctx.mountApp(frame(ctx, [stripe, loader, grid], true));
+    showLoader();
     paint();
     refresh();
     inbox.load();
