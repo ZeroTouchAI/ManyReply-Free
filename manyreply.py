@@ -1285,6 +1285,26 @@ def dm_fields(url):
                            "notFollowingMessage": f"This link is for followers only 🙌\n\n{ask}"}}
 
 
+def post_label(repo):
+    """What a post is called in the follow request: owner/repo for a GitHub repo, the website's name otherwise."""
+    repo = str(repo or "").strip()
+    if "github.com/" in repo:
+        return repo.split("github.com/")[-1].strip("/")[:60]
+    return urllib.parse.urlsplit(repo).netloc.removeprefix("www.")[:60]
+
+
+def with_post(fields, repo):
+    """Name the post in both follow requests, so the thread in your Instagram inbox shows which post someone came from.
+    A kept-apart step (not inside dm_fields) so the wording that is the same for every post stays in one place."""
+    label, gate = post_label(repo), fields.get("followGate")
+    if not label or not gate:
+        return fields
+    gate = {**gate,
+            "message": gate["message"].replace("This link is for followers only.", f"The link to {label} is for followers only.", 1),
+            "notFollowingMessage": gate["notFollowingMessage"].replace("This link is for followers only", f"The link to {label} is for followers only", 1)}
+    return {**fields, "followGate": gate}
+
+
 def apply_dm_wording(soft=False):
     """Re-apply the current DM wording and buttons to every automation on Zernio. With soft=True an automation Zernio
     refuses (a deleted one, say) is reported and skipped, so the rest still go through. Returns (updated, failed)."""
@@ -1302,7 +1322,7 @@ def apply_dm_wording(soft=False):
             print(f"  could not update {automation_id}: {str(err)[:160]}")
 
     for p in posts:
-        fields = dm_fields(p.get("link", p["repo"]))
+        fields = with_post(dm_fields(p.get("link", p["repo"])), p["repo"])
         patch(p["automation_id"], {**fields, "alsoMatchInDms": True})
         for extra in ("story", "reel"):
             if p.get(extra, {}).get("automation_id"):
@@ -1317,7 +1337,7 @@ def refresh_dms():
 
 
 def gate_version():
-    gate = dm_fields("https://example.com")["followGate"]
+    gate = with_post(dm_fields("https://example.com"), "https://github.com/owner/repo")["followGate"]
     return hashlib.sha1(json.dumps(gate, sort_keys=True).encode()).hexdigest()[:12]
 
 
@@ -1537,7 +1557,7 @@ def create_automation(keyword, url, name, post_id=None, story=False, dms=True):
         # On its own post the word may sit inside a sentence, typos forgiven. A word that answers on EVERY post
         # (older posts) must be the whole comment, or everyday words like FREE or VIDEO would fire constantly.
         **({"matchMode": "word", "typoTolerance": True} if post_id or story else {"matchMode": "exact"}),
-        **dm_fields(url),
+        **with_post(dm_fields(url), url),
         "audience": {"followerStatus": "follower", "whenUnknown": "verify"},
     }
     if story:  # answers the word as a reply to any Story of the account (the word itself is unique to one post)
@@ -2439,11 +2459,11 @@ details.more>summary{margin-bottom:8px}
 .word{display:inline-block;font:700 11px/1 var(--mono);letter-spacing:.04em;padding:6px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent-strong);white-space:nowrap}
 .words{display:flex;flex-wrap:wrap;gap:8px}
 .clk{display:inline-block;min-width:30px;text-align:center;font:700 12px/1 var(--mono);padding:5px 8px;border-radius:999px;background:var(--raise);color:var(--muted)}
-.clk.hot{background:var(--bad);color:#fff}
+.clk.hot{background:var(--good);color:#fff}
 .posts{display:grid;border:1px solid var(--line);border-radius:12px;overflow:hidden}
 .post{margin:0;border-bottom:1px solid var(--line)}
 .post:last-child{border-bottom:0}
-.post summary,.planned-row{display:grid;grid-template-columns:96px minmax(0,1.4fr) auto minmax(0,.9fr) auto auto 42px 56px;gap:12px;align-items:center;padding:11px 14px;font-size:13px}
+.post summary,.planned-row{display:grid;grid-template-columns:96px minmax(0,1.4fr) 96px minmax(0,.9fr) 64px 108px 78px 56px;gap:12px;align-items:center;padding:11px 14px;font-size:13px}
 .post summary:hover{background:var(--raise)}
 .planned-row{grid-template-columns:150px minmax(0,1fr) auto;background:var(--accent-soft);border-bottom:1px solid var(--line)}
 .planned-row b{font-weight:800;color:var(--accent-strong);font-size:12px;display:block}
@@ -2521,8 +2541,13 @@ tr:has(+tr.res-row) td{border-bottom:0;padding-bottom:4px}tr.res-row td{padding-
 .rch{font:600 12px/1 var(--mono);padding:5px 8px;border-radius:999px;background:var(--raise);color:var(--muted);white-space:nowrap}
 .rch.hi{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}.rch.lo{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
 .res span.lead{background:none;border-color:transparent;padding-left:0;font-weight:600;color:var(--text)}.res span.z{opacity:.45}.res span.win{border-color:var(--good)}.res span.win b{color:var(--good)}
-td.zero{color:var(--muted);opacity:.6}td.best{color:var(--good);font-weight:800}
-@media (max-width:900px){.post .rch{display:none}}
+td.zero{color:var(--muted);opacity:.6}td.best{color:var(--good);font-weight:800;background:color-mix(in srgb,var(--good) 12%,transparent)}
+td.mid{color:var(--warn);font-weight:700;background:color-mix(in srgb,var(--warn) 12%,transparent)}
+td.worst{color:var(--bad);font-weight:800;background:color-mix(in srgb,var(--bad) 11%,transparent)}td.worst.zero{opacity:1}
+.key{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 14px;color:var(--muted);font-size:13px}.key b{font-weight:800}.key .g{color:var(--good)}.key .a{color:var(--warn)}.key .r{color:var(--bad)}
+.post-head{display:grid;grid-template-columns:96px minmax(0,1.4fr) 96px minmax(0,.9fr) 64px 108px 78px 56px;gap:12px;padding:0 14px 8px;font:700 11px/1.2 var(--sans,inherit);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.post summary .word,.post summary .rch,.post summary .clk,.post summary .pill{justify-self:start}.post summary .word{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:900px){.post .rch{display:none}.post-head{display:none}}
 .tiles b>span{font:inherit;color:inherit}.tiles b i{font-size:12px;vertical-align:middle}
 .style{border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:0 0 12px}
 .st-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.st-head b{font-size:16px}
@@ -2929,12 +2954,24 @@ DASH_JS = """
 (() => {  // colour cues for every table: zeros fade; in ranked tables the best of each column turns green
   for (const td of document.querySelectorAll("td.n")) if (/^[-–]?$|^0([.]0+)?$/.test(td.textContent.trim())) td.classList.add("zero");
   for (const td of document.querySelectorAll("table.wins td.n")) if (!td.classList.contains("zero")) td.classList.add("best");
+  // green = doing well, amber = in the middle, red = needs work. Each column is ranked against its own rows (best third / worst third);
+  // "x usual" is judged against your usual post instead (1.25x or more is green, under 0.75x is red).
   for (const t of document.querySelectorAll("table.rank")) {
-    const rows = [...t.querySelectorAll("tr")].slice(1), cols = rows[0] ? rows[0].children.length : 0;
+    const rows = [...t.querySelectorAll("tr")].slice(1), head = t.querySelector("tr"), cols = rows[0] ? rows[0].children.length : 0;
     for (let c = 0; c < cols; c++) {
+      const label = ((head.children[c] || {}).textContent || "").trim();
+      if (/^(Posts|Weeks)$/.test(label)) continue;
       const cells = rows.map(r => r.children[c]).filter(td => td && td.classList.contains("n") && !td.closest("tr").querySelector("th"));
-      const val = td => parseFloat(td.textContent.replace(/,/g, "")) || 0, best = Math.max(0, ...cells.map(val));
-      if (best > 0 && t.querySelector("tr").children[c].textContent !== "Posts") cells.forEach(td => { if (val(td) === best) td.classList.add("best"); });
+      const val = td => parseFloat(td.textContent.replace(/,/g, "")), nums = cells.map(val).filter(Number.isFinite);
+      const lo = Math.min(...nums), hi = Math.max(...nums);
+      for (const td of cells) {
+        const v = val(td);
+        if (!Number.isFinite(v)) continue;
+        let k = "";
+        if (/x usual/i.test(label)) k = v >= 1.25 ? "best" : v < 0.75 ? "worst" : "mid";
+        else if (nums.length > 1 && hi > lo) { const f = (v - lo) / (hi - lo); k = f >= 2 / 3 ? "best" : f <= 1 / 3 ? "worst" : "mid"; }
+        if (k) td.classList.add(k);
+      }
     }
   }
 })();
@@ -3154,6 +3191,10 @@ def dashboard():
         cls = "hi" if usual and r >= usual * 1.25 else "lo" if usual and r <= usual * 0.6 else ""
         return f"<span class='rch {cls}' title='Reach; the usual post reaches {usual:.0f}'>{r:,} reach</span>"
 
+    def followers_chip(p):  # the last number on a Posted line: new followers from the post and from its Reel
+        n = (stat(p, "follows") or 0) + (p.get("reel", {}).get("stats", {}).get("follows") or 0)
+        return f"<span class='clk{' hot' if n else ''}' title='New followers from this post and its Reel'>{n:,}</span>"
+
     def post_line(p):
         st = p.get("stats", {})
         reel = p.get("reel", {})
@@ -3161,16 +3202,16 @@ def dashboard():
                   ("Posted at", p.get("slot", "")), ("Likes", num(stat(p, "likes"))), ("Comments", num(stat(p, "comments"))),
                   ("Word comments", num(stat(p, "keyword_comments"))), ("Story replies", num(stat(p, "story_replies"))),
                   ("Follow gate: asked / passed", f"{num(stat(p, 'gate_sent'))} / {num(stat(p, 'gate_passed'))}"),
-                  ("Links sent by DM", num(stat(p, "dms_sent"))), ("Reach", num(stat(p, "reach"))),
+                  ("Links sent by DM", num(stat(p, "dms_sent"))), ("Link clicks", num(stat(p, "link_clicks"))), ("Reach", num(stat(p, "reach"))),
                   ("Saves", num(stat(p, "saves"))), ("Sends", num(stat(p, "shares"))), ("Follows", num(stat(p, "follows"))),
                   ("Score", num(score.get(p.get("dir")))),
-                  ("Reel", f"{num(reel.get('stats', {}).get('views'))} views, {num(reel.get('stats', {}).get('reach'))} reached"
+                  ("Reel", f"{num(reel.get('stats', {}).get('views'))} views, {num(reel.get('stats', {}).get('reach'))} reached, {num(reel.get('stats', {}).get('follows'))} followers"
                    + (f" · {link(reel.get('instagram_url'), 'open')}" if reel.get("instagram_url") else ""))]
         rows = "".join(f"<dt>{e(k)}</dt><dd>{v if k == 'Reel' else e(str(v))}</dd>" for k, v in detail if v not in ("", None))
         return (f"<details class='post'><summary><span class='d'>{e(p['date'][:10])}</span>"
                 f"<span class='r'>{star(p['repo']) if p.get('source') != 'app' else ''}{e(p['repo'].split('github.com/')[-1])}</span><span class='word'>{e(p['keyword'])}</span>"
                 f"<span class='t'>{e(p.get('topic', ''))}</span><span class='pill {e(p['status'])}'>{e(p['status'])}</span>"
-                f"{reach_chip(p)}{clicks(stat(p, 'link_clicks'))}"
+                f"{reach_chip(p)}{followers_chip(p)}"
                 f"<span class='ig'>{link(p.get('instagram_url'), 'Instagram') if p.get('instagram_url') else ''}</span></summary>"
                 f"<dl>{rows}<dt>Repo</dt><dd>{link(p['repo'], p['repo'])}</dd></dl></details>")
 
@@ -3206,6 +3247,8 @@ def dashboard():
 
     table = lambda head: (lambda rows: f'<div class="scroll"><table><tr>{head}</tr>{rows}</table></div>')
     plan_html = five(plan_rows, "<tr>", table("<th>When</th><th>What</th><th>Status</th>"), "Nothing booked yet.")
+    post_head = ("<div class='post-head' aria-hidden='true'>" + "".join(f"<span>{t}</span>" for t in (
+        "Date", "Repo", "Word", "Topic", "Status", "Reach", "Followers", "")) + "</div>") if post_lines else ""
     posts_html = five(post_lines, "<details class='post'>|<div class='post planned-row'>",
                       lambda r: f'<div class="posts">{r}</div>', "Nothing posted yet.")
     queue_table = lambda rows: (f'<div class="scroll"><table class="queue"><tr><th>Repo</th><th>Sent by</th>'
@@ -3301,8 +3344,8 @@ def dashboard():
 <div class="scroll"><table class="rank"><tr><th>Type</th><th class="n">Posts</th><th class="n">Avg reach</th><th class="n">Avg views</th><th class="n">Saves</th><th class="n">Shares</th><th class="n">Follows</th></tr>{compare_rows}</table></div></section>
 <section class="card" id="top-posts" style="grid-area:top">{head("star", "Top posts", "Your 10 best posts of the last 60 days by reach. The x column is reach against your usual post: copy what the top ones have in common.")}
 {five(top_rows, "<tr>", lambda r: table('<th>Date</th><th>Type</th><th>Post</th><th class="n">Reach</th><th class="n">x usual</th><th class="n">Saves</th><th class="n">Sends</th><th class="n">Follows</th>')(r).replace("<table>", "<table class='rank'>", 1), "Shows up once posts have numbers.")}</section>
-<section class="card" id="posts" style="grid-area:posts">{head("file", "Posted", "What went out, newest first. Click a line for its details; a red number means people clicked the link.")}
-{posts_html}</section>
+<section class="card" id="posts" style="grid-area:posts">{head("file", "Posted", "What went out, newest first. Click a line for its details. The last number is the new followers that post and its Reel brought in (green when above zero).")}
+{post_head}{posts_html}</section>
 <section class="card" id="topics-card" style="grid-area:topics">{head("search", "Search topics", "What it searches GitHub for. The higher a topic sits, the more its repos are favoured.")}
 <ul class="topics" id="topics">{topics}</ul>
 <form id="add-topic" hidden><h3>Add a topic</h3>

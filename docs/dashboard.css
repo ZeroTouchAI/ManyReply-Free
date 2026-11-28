@@ -142,7 +142,7 @@ html{scroll-behavior:smooth}
 .app .posts{display:grid;border:1px solid var(--line);border-radius:12px;overflow:hidden}
 .app .post{margin:0;border-bottom:1px solid var(--line)}
 .app .post:last-child{border-bottom:0}
-.app .post summary{display:grid;grid-template-columns:96px minmax(0,1.4fr) auto minmax(0,.9fr) auto auto 42px 56px;gap:8px 12px;align-items:center;padding:11px 14px;font-size:13px}
+.app .post summary{display:grid;grid-template-columns:96px minmax(0,1.4fr) 96px minmax(0,.9fr) 64px 108px 78px 56px;gap:8px 12px;align-items:center;padding:11px 14px;font-size:13px}
 .app .post summary:hover{background:var(--raise)}
 .app .post .d{font-size:12px;color:var(--muted)}
 .app .post .r{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -328,3 +328,9 @@ body:has(.app)>.site-foot{display:none}
 .app .legend .cv{margin-left:6px;font-size:12px}
 .app table.rank td .cv{min-width:0}
 .app table.rank td.n{white-space:nowrap}
+
+/* Posted: column names above the lines (the lines use fixed columns so everything lines up) */
+.app .posthead{display:grid;grid-template-columns:96px minmax(0,1.4fr) 96px minmax(0,.9fr) 64px 108px 78px 56px;gap:8px 12px;padding:0 14px 8px;font:700 11px/1.2 var(--body);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.app .post summary .word,.app .post summary .rch,.app .post summary .clk,.app .post summary .pill{justify-self:start}
+.app .post summary .word{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:900px){.app .posthead{display:none}}

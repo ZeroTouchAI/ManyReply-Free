@@ -452,7 +452,7 @@
     const gateBtn = bindText(el('input', { class: 'input' }), 'gateButton');
     const gateRetry = bindText(el('textarea', { class: 'textarea', rows: 4 }), 'notFollowingMessage');
     const gateBox = el('div', null,
-      fieldBox('Follow request', gateMsg, 'gateMessage', counter('gateMessage', MR.LIMITS.gate)),
+      fieldBox('Follow request', gateMsg, 'gateMessage', el('div', null, el('p', { class: 'hint' }, '{{post}} becomes the name of the post you picked, so when someone shows up in your Instagram inbox you can tell which post they came from.'), counter('gateMessage', MR.LIMITS.gate))),
       el('div', { class: 'row2 even' }, fieldBox('Button that opens your profile', gateProfile, 'gateProfileButton', counter('gateProfileButton', MR.LIMITS.gateButton)),
         fieldBox('Button they tap once following', gateBtn, 'gateButton', counter('gateButton', MR.LIMITS.gateButton))),
       el('details', { class: 'advanced' }, el('summary', null, 'What to say if they tap before following'), fieldBox('Message', gateRetry, 'notFollowingMessage')));

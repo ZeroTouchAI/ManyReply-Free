@@ -36,7 +36,7 @@
     ['Your posts and goal', [
       ['Growth', 'Followers over time. Click a day to see the posts around it, or pick two dates to see what you posted and how many followers you gained between them. Follower history goes back 89 days.'],
       ['Performance by type', 'Photos, carousels and reels side by side, so you can see which format works best for you.'],
-      ['Posted', 'All your posts, newest first. Each one has a row of reactions: reached (people who saw it), views, likes, comments, saves, sends (shared by DM), follows (new followers from the post), word comments (comments that used your word) and link clicks (taps on the link in your DM). Open a post for the full detail.'],
+      ['Posted', 'All your posts, newest first. Each one has a row of reactions: reached (people who saw it), views, likes, comments, saves, sends (shared by DM), follows (new followers from the post), word comments (comments that used your word) and link clicks (taps on the link in your DM). Each line reads: date, post, word, type, status, reach and followers gained from that post. Open a post for the full detail.'],
       ['Goal', 'Set a follower target (how many followers you want) and the date to reach it. The bar shows how far along you are, how many new followers a week you need, and how many you have been gaining.'],
       ['Best time to post', 'A grid of weekdays and times of day. Green is your best average reach, red is your lowest. The number in each square is the average reach, and an empty square means no posts then.'],
       ['Top posts', 'Your best posts of the last 60 days, ranked by reach, with saves, sends and follows next to each. “x usual” compares its reach with your normal post (2x means twice as many people).'],
@@ -182,9 +182,15 @@
         hasWord ? el('span', { class: 'word' }, w.words[0]) : el('span'), el('span', { class: 't' }, tname[p.type]),
         hasWord ? el('span', { class: 'pill ' + (live ? 'live' : 'paused') }, live ? 'live' : 'paused') : el('span'),
         el('span', { class: 'rch ' + cls, title: 'Reach; the usual post reaches ' + Math.round(usual) }, f0(p.reach) + ' reach'),
-        el('span', { class: 'clk' + (s.clicks ? ' hot' : '') }, String(hasWord ? s.clicks : 0)),
+        el('span', { class: 'clk' + (p.follows ? ' hot' : ''), title: 'New followers from this post' }, f0(p.follows)),
         el('span', { class: 'ig' }, u ? el('a', { href: u, target: '_blank', rel: 'noopener', onclick: function (e) { e.stopPropagation(); } }, 'Instagram') : null),
         chips(p, w)), el('dl', null, kids));
+    }
+    // Column names for the Posted lines (the lines are fixed-width columns, so these sit right above them).
+    function postHead() {
+      return el('div', { class: 'posthead', 'aria-hidden': 'true' }, ['Date', 'Post', 'Word', 'Type', 'Status', 'Reach', 'Followers', ''].map(function (t) {
+        return el('span', { title: t === 'Followers' ? 'New followers from this post' : null }, t);
+      }));
     }
     function postedCard() {
       var body;
@@ -193,9 +199,9 @@
       else if (!posts().length) body = el('div', { class: 'empty' }, 'No posts to show yet. Zernio lists the Instagram posts it can read analytics for. If you post outside Zernio, turn on its external-post sync, then press Update now.');
       else {
         var bp = A.wordsByPost(d.autos || []), list = posts(), usual = list.reduce(function (a, p) { return a + p.reach; }, 0) / list.length;
-        body = more(list, function (rows) { return el('div', { class: 'posts' }, rows.map(function (p) { return postLine(p, bp, usual); })); }, 10);
+        body = el('div', null, postHead(), more(list, function (rows) { return el('div', { class: 'posts' }, rows.map(function (p) { return postLine(p, bp, usual); })); }, 10));
       }
-      return card('posts', 'file', 'Posted', 'What went out, newest first. Each line shows how people reacted; click it for the details. A green number means people clicked the link.', null, body);
+      return card('posts', 'file', 'Posted', 'What went out, newest first. Each line shows how people reacted; click it for the details. The last number is the new followers that post brought in (green when above zero). Link clicks are in the numbers under each line.', null, body);
     }
 
     // ---- Analytics: the tiles, each period against the one before

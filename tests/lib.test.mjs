@@ -198,3 +198,14 @@ test('accounts: profileId given as an object, or the id given as id, still works
   const got = await client.accounts();
   assert.deepEqual(got.map((a) => [a._id, a.profileId]), [['a1', 'p1'], ['a2', 'p2']]);
 });
+
+test('the follow request names the post, so you can tell where someone came from', () => {
+  const one = MR.buildAutomation(filled({ platformPostId: '17912345678901234', postTitle: 'My new guide' }), account).body;
+  assert.match(one.followGate.message, /from my post “My new guide” is for followers only/);
+  assert.match(one.followGate.notFollowingMessage, /from my post “My new guide” is for followers only/);
+  assert.ok(!one.followGate.message.includes('{{post}}'));
+  const any = MR.buildAutomation(filled({ scope: 'any', platformPostId: '', postTitle: '' }), account).body;
+  assert.match(any.followGate.message, /The link from my post is for followers only/);
+  assert.ok(!any.followGate.message.includes('{{post}}') && !any.followGate.message.includes('my post “'));
+  assert.equal(MR.withPost('x{{post}}', { scope: 'post', postTitle: 'a'.repeat(90) }), 'x “' + 'a'.repeat(39) + '…”');
+});

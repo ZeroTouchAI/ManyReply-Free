@@ -210,6 +210,12 @@ _gate = m.dm_fields("https://github.com/a/b")["followGate"]
 assert 0 < len(_gate["profileButtonLabel"]) <= 20 and 0 < len(_gate["buttonLabel"]) <= 20, "Zernio allows 20 characters"
 assert len(_gate["message"]) <= 640 and len(_gate["notFollowingMessage"]) <= 640, "Meta's cap for a message with buttons"
 assert "Follow me" in _gate["message"] and "I'm following" in _gate["message"] and "Follow me" in _gate["notFollowingMessage"]
+# the follow requests name the post, so the thread in the inbox shows which post someone came from
+_named = m.with_post(m.dm_fields("https://github.com/a/b"), "https://github.com/a/b")["followGate"]
+assert "The link to a/b is for followers only." in _named["message"] and "The link to a/b is for followers only" in _named["notFollowingMessage"]
+assert "Follow me" in _named["message"] and len(_named["message"]) <= 640 and len(_named["notFollowingMessage"]) <= 640
+assert m.post_label("https://www.example.com/x") == "example.com" and m.post_label("") == ""
+assert m.with_post(m.dm_fields("https://x.io"), "")["followGate"] == m.dm_fields("https://x.io")["followGate"], "no label: wording unchanged"
 # a changed gate is pushed to the automations already live, once; nothing is remembered if Zernio took none of it
 import pathlib as _pl, tempfile as _tf
 _tmp = _pl.Path(_tf.mkdtemp())

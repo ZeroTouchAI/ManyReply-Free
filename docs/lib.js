@@ -115,9 +115,9 @@
       dmMessage: 'Here you go {{first_name}} 😊 Tap the button to open it.',
       linkUrl: '', linkLabel: 'Open the link', link2Url: '', link2Label: '', delay: 0,
       gate: true,
-      gateMessage: `Almost there! This link is for followers only.\n\n${ask}`,
+      gateMessage: `Almost there! The link from my post{{post}} is for followers only.\n\n${ask}`,
       gateButton: "I'm following ✅", gateProfileButton: 'Follow me 👉',
-      notFollowingMessage: `This link is for followers only 🙌\n\n${ask}`,
+      notFollowingMessage: `The link from my post{{post}} is for followers only 🙌\n\n${ask}`,
       reply: true, replyText: '@{{username}} Sent to your DMs 📩',
       replyVariations: "@{{username}} Check your DMs 🚀\n@{{username}} It's in your DMs ✅",
     };
@@ -128,6 +128,12 @@
 
   function isHttps(u) { try { return new URL(u).protocol === 'https:'; } catch (e) { return false; } }
   function lines(text) { return String(text || '').split('\n').map((s) => s.trim()).filter(Boolean); }
+  /** {{post}} in the follow request becomes the name of the post you picked, so the thread in your Instagram inbox shows which post someone came from.
+   *  On "any post" there is no single post to name, so it is left out. */
+  function withPost(text, f) {
+    const title = f && f.scope === 'post' ? clip(f.postTitle, 40) : '';
+    return String(text == null ? '' : text).replace(/ ?\{\{\s*post\s*\}\}/gi, title ? ` “${title}”` : '');
+  }
   function clip(s, n) { s = String(s || '').replace(/\s+/g, ' ').trim(); return s.length > n ? s.slice(0, n - 1) + '…' : s; }
 
   /** Checks the form, and builds the request Zernio expects. Returns { errors: {field: message}, body }. */
@@ -156,10 +162,10 @@
     }
 
     if (f.gate) {
-      if (!label(f.gateMessage) || label(f.gateMessage).length > LIMITS.gate) errors.gateMessage = `Write the follow request, up to ${LIMITS.gate} characters.`;
+      if (!label(withPost(f.gateMessage, f)) || label(withPost(f.gateMessage, f)).length > LIMITS.gate) errors.gateMessage = `Write the follow request, up to ${LIMITS.gate} characters.`;
       if (!label(f.gateButton) || label(f.gateButton).length > LIMITS.gateButton) errors.gateButton = `Button names can be ${LIMITS.gateButton} characters.`;
       if (!label(f.gateProfileButton) || label(f.gateProfileButton).length > LIMITS.gateButton) errors.gateProfileButton = `Button names can be ${LIMITS.gateButton} characters.`;
-      if (label(f.notFollowingMessage).length > LIMITS.notFollowing) errors.notFollowingMessage = `Up to ${LIMITS.notFollowing} characters.`;
+      if (label(withPost(f.notFollowingMessage, f)).length > LIMITS.notFollowing) errors.notFollowingMessage = `Up to ${LIMITS.notFollowing} characters.`;
     }
     let variations = [];
     if (f.reply) {
@@ -181,8 +187,8 @@
     if (delay > 0) body.dmDelaySeconds = delay;
     if (f.gate) {
       body.audience = { followerStatus: 'follower', whenUnknown: 'verify' };
-      body.followGate = { message: label(f.gateMessage), buttonLabel: label(f.gateButton), profileButtonLabel: label(f.gateProfileButton),
-                          ...(label(f.notFollowingMessage) ? { notFollowingMessage: label(f.notFollowingMessage) } : {}) };
+      body.followGate = { message: label(withPost(f.gateMessage, f)), buttonLabel: label(f.gateButton), profileButtonLabel: label(f.gateProfileButton),
+                          ...(label(withPost(f.notFollowingMessage, f)) ? { notFollowingMessage: label(withPost(f.notFollowingMessage, f)) } : {}) };
     } else {
       body.audience = { followerStatus: 'any' };
     }
@@ -252,8 +258,8 @@
     return {
       handle: (account && account.username) || 'yourhandle', word, commenter: SAMPLE.username, reply: first,
       dm: { text: personalize(f.dmMessage), buttons: btns.map((b) => personalize(b)) },
-      gate: f.gate ? { text: personalize(f.gateMessage), buttons: [personalize(f.gateProfileButton), personalize(f.gateButton)],
-                       retry: personalize(f.notFollowingMessage) } : null,
+      gate: f.gate ? { text: personalize(withPost(f.gateMessage, f)), buttons: [personalize(f.gateProfileButton), personalize(f.gateButton)],
+                       retry: personalize(withPost(f.notFollowingMessage, f)) } : null,
     };
   }
 
@@ -265,6 +271,6 @@
   }
 
   return { API_BASE, LIMITS, DELAYS, ZernioError, createClient, shortcodeFromUrl, findPostByUrl, normalizeWords, checkWord, defaults,
-           matchModeFor, buildAutomation, toPatch, isEditable, fromAutomation, personalize, delayLabel, flowSteps, previewModel,
+           matchModeFor, withPost, buildAutomation, toPatch, isEditable, fromAutomation, personalize, delayLabel, flowSteps, previewModel,
            statsOf, clip };
 });
